@@ -11,7 +11,7 @@ var SerialPort = serialport.SerialPort;
 var parsers = serialport.parsers;
 
 var port = new SerialPort("/dev/ttyACM0", { // if you get an error that this file does not exist,
-    // make sure that you plug in the arduino via a serial port first. That will create the file in rpi
+    // make sure that you plug in the Arduino via a serial port first. That will create the file in rpi
     baudrate: 9600,
     parser: parsers.readline('\r\n')
 });
@@ -25,6 +25,20 @@ console.log("listening on port:" + netPort);
 // ==============================Sending data======================
 io.sockets.on('connection', function (socket) {
     socket.emit('pi', { status: 'opened' });
+
+    socket.on('control', function(data) {
+        console.log(data);
+        // when we get a control signal
+        // this is also how we can write over the serial port
+        /*
+         port.write('main screen turn on', function(err) {
+             if (err) {
+                return console.log('Error on write: ', err.message);
+             }
+             console.log('message written');
+         });
+         */
+    });
 
     port.on('data', function(data) { // triggered every time there is data coming from the serial port
         socket.emit('pi', {val: data}); // this is what actually sensor reading messages through the websocket

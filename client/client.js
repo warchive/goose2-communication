@@ -19,3 +19,5 @@ socket.on('disconnect', function(){
     console.log("disconnected");
 });
 
+// this is how we write to the socket
+socket.emit('control', JSON.stringify({test: 1234}));
