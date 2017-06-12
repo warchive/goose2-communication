@@ -29,6 +29,7 @@ console.log("listening on port:" + netPort);
 
 // ==============================Sending data======================
 io.sockets.on('connection', function (socket) {
+    log.info('Established connection');
     socket.emit('pi', {status: 'opened'});
 
     socket.on('control', function(data) {
@@ -36,8 +37,9 @@ io.sockets.on('connection', function (socket) {
         port.write('main screen turn on', function(err) {
             if (err) {
                 log.error('Failed to send data over serial port: ', err.message, ' data: ', data);
+            } else {
+                log.info('Successful cmd: ', data);
             }
-            log.info('Successful cmd: ', data);
         });
     });
 
