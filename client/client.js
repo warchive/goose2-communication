@@ -20,4 +20,5 @@ socket.on('disconnect', function(){
 });
 
 // this is how we write to the socket
-socket.emit('control', JSON.stringify({test: 1234}));
+socket.emit('control', JSON.stringify({Command: "Autonomous", Value: [1]}));
+
