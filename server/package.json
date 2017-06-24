@@ -3,6 +3,6 @@
     "express": "^4.15.3",
     "serialport": "^4.0.7",
     "simple-node-logger": "^0.93.28",
-    "socket.io": "^2.0.2"
+    "socket.io": "^2.0.3"
   }
 }

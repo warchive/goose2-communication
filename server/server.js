@@ -17,7 +17,7 @@ var parsers = serialport.parsers;
 
 var port = new SerialPort("/dev/ttyACM0", { // if you get an error that this file does not exist,
     // make sure that you plug in the Arduino via a serial port first. That will create the file in rpi
-    baudrate: 9600,
+    baudrate: 115200,
     parser: parsers.readline('\r\n')
 });
 
@@ -30,7 +30,6 @@ console.log("listening on port:" + netPort);
 // ==============================Sending data======================
 io.sockets.on('connection', function (socket) {
     log.info('Established connection');
-    socket.emit('pi', {status: 'opened'});
 
     socket.on('control', function(data) {
         console.log(data);
@@ -44,8 +43,7 @@ io.sockets.on('connection', function (socket) {
     });
 
     port.on('data', function(data) { // triggered every time there is data coming from the serial port
-        socket.emit('pi', {val: data}); // this is what actually sensor reading messages through the websocket
-        // by specifying 'pi', i'm obligated to listen to pi events ont he client side
+        socket.broadcast.emit('pi', data); // this is what actually sensor reading messages through the websocket
     });
 
     console.log('Socket is open'); // log to console, once serial connection is established
