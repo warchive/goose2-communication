@@ -3,7 +3,7 @@
  */
 exports.writeFile = function (data, callback) {
     var fs = require('fs');
-    fs.writeFile("../launch-records/" + timenow() + ".json", data, function(err) {
+    fs.writeFile(timenow() + ".json", data, function(err) {
 
         if (err) {
             return callback(err);

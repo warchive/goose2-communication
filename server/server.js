@@ -10,6 +10,7 @@ const fileWriter = require('./fileWriter.js');
 const serialport = require('serialport');
 
 var dataLog = [];
+dataLog.push({val: "test"});
 var connectCounter = 0;
 
 // Set up cli
@@ -41,8 +42,13 @@ console.log("listening on port:" + netPort);
 
 
 // Listeners
-io.sockets.on('connect', function() { connectCounter++; });
+io.sockets.on('connect', function() { 
+    connectCounter++; 
+    log.info('Client count: ' + connectCounter);    
+});
+
 io.sockets.on('disconnect', function() {
+    log.info('Client count: ' + connectCounter);
     connectCounter--;
     if (connectCounter === 0) {
         saveData();
@@ -75,6 +81,7 @@ io.sockets.on('connection', function (socket) {
 
 rl.on('line', function (input)  {
     if (input === 'save') {
+	console.log("cmd: save");
         saveData();
     } else {
         console.log("Command is not supported");
