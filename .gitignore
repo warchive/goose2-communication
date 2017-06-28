@@ -1,3 +1,4 @@
 .idea
-node_modules
-blackbox.log
+server/node_modules
+server/blackbox.log
+client/node_modules
