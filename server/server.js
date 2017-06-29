@@ -53,6 +53,18 @@ io.sockets.on('connection', function (socket) {
 	    }
 	});
 
+    socket.on('checkSum', function(data) {
+        const CHECK_VAL = 13;
+        var parsed = JSON.parse(data);
+        var test = parsed.test;
+        var ans = [];
+
+        for (var i = 0; i < test.length; i++) {
+            ans.push(test[i] + CHECK_VAL);
+        }
+
+        socket.emit('answer', JSON.stringify({ans: ans}));
+    });
 
     socket.on('control', function(data) {
         console.log(data);
@@ -77,7 +89,6 @@ io.sockets.on('connection', function (socket) {
 
 rl.on('line', function (input)  {
     if (input === 'save') {
-	console.log("cmd: save");
         writer(dataLog);
     } else {
         console.log("Command is not supported");
