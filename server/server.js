@@ -44,14 +44,14 @@ console.log("listening on port:" + netPort);
 // Listeners
 
 io.sockets.on('connection', function (socket) {
-	log.info('Client count: ' + ++connectCounter);
+    log.info('Client count: ' + ++connectCounter);
 
-	socket.on('disconnect', function() {
-	    log.info('Client count: ' + --connectCounter);
-	    if (connectCounter === 0) {
-		    writer(dataLog);
-	    }
-	});
+    socket.on('disconnect', function() {
+        log.info('Client count: ' + --connectCounter);
+        if (connectCounter === 0) {
+	    writer(dataLog);
+        }
+    });
 
     socket.on('checkSum', function(data) {
         const CHECK_VAL = 13;
@@ -77,12 +77,18 @@ io.sockets.on('connection', function (socket) {
         });
     });
 
+    socket.on('save', function(data) {
+        writer(dataLog);
+        log.info("save triggered from client");
+    });
+
     port.on('data', function(data) { // triggered every time there is data coming from the serial port
         socket.broadcast.emit('pi', data); // this is what actually sensor reading messages through the websocket
         dataLog.push({val: data});
         // by specifying 'pi', i'm obligated to listen to pi events ont he client side
     });
 
+    log.info('Socket is open'); // log to console, once serial connection is established
     console.log('Socket is open'); // log to console, once serial connection is established
 });
 
@@ -110,6 +116,7 @@ function writer (data) {
 
     fs.writeFile(filename, JSON.stringify(data), function (err) {
         if (err) throw err;
+        log.info('data saved in /launch-records/' + filename);
         console.log('data saved in /launch-records/' + filename);
     });
 }

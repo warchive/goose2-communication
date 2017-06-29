@@ -55,3 +55,32 @@
 2017-06-28 21:15:13.081 INFO  Client count: 1 
 2017-06-28 21:15:13.133 INFO  Successful cmd: {"Command":"Autonomous","Value":[1]} 
 2017-06-28 21:15:20.570 INFO  Client count: 0 
+2017-06-28 21:33:19.051 INFO  Client count: 1 
+2017-06-28 21:33:19.136 INFO  Successful cmd: {"Command":"Autonomous","Value":[1]} 
+2017-06-28 21:33:29.746 INFO  Client count: 0 
+2017-06-28 21:37:07.479 INFO  Client count: 1 
+2017-06-28 21:37:07.539 INFO  Successful cmd: {"Command":"Autonomous","Value":[1]} 
+2017-06-28 21:38:09.946 INFO  Client count: 0 
+2017-06-28 21:38:11.302 INFO  Client count: 1 
+2017-06-28 21:38:11.348 INFO  Successful cmd: {"Command":"Autonomous","Value":[1]} 
+2017-06-28 21:38:14.881 INFO  Client count: 0 
+2017-06-29 07:43:48.949 INFO  Client count: 1 
+2017-06-29 07:43:49.041 INFO  Successful cmd: {"Command":"Autonomous","Value":[1]} 
+2017-06-29 07:44:14.746 INFO  Client count: 0 
+2017-06-29 07:47:33.975 INFO  Client count: 1 
+2017-06-29 07:47:34.060 INFO  Successful cmd: {"Command":"Autonomous","Value":[1]} 
+2017-06-29 07:47:58.619 INFO  Client count: 0 
+2017-06-29 07:52:57.677 INFO  Client count: 1 
+2017-06-29 07:52:57.678 INFO  Socket is open 
+2017-06-29 07:52:57.774 INFO  Successful cmd: {"Command":"Autonomous","Value":[1]} 
+2017-06-29 07:53:00.021 INFO  save triggered from client 
+2017-06-29 07:53:03.988 INFO  Client count: 1 
+2017-06-29 07:53:03.989 INFO  Socket is open 
+2017-06-29 07:53:34.675 INFO  Client count: 1 
+2017-06-29 07:53:34.677 INFO  Socket is open 
+2017-06-29 07:53:38.594 INFO  save triggered from client 
+2017-06-29 07:53:38.601 INFO  data saved in /launch-records//home/pi/websocket/communication-system/server/launch-records/29_5_2017_7_53_38_589.json 
+2017-06-29 07:54:03.631 INFO  save triggered from client 
+2017-06-29 07:54:03.635 INFO  data saved in /launch-records//home/pi/websocket/communication-system/server/launch-records/29_5_2017_7_54_3_629.json 
+2017-06-29 07:54:11.496 INFO  Client count: 0 
+2017-06-29 07:54:11.502 INFO  data saved in /launch-records//home/pi/websocket/communication-system/server/launch-records/29_5_2017_7_54_11_496.json 
