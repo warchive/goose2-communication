@@ -6,8 +6,9 @@ const app = express();
 const server = require('http').createServer(app);
 const io = require('socket.io').listen(server);	//web socket server
 const SimpleNodeLogger = require('simple-node-logger'); // create a custom timestamp format for log statements
-const fileWriter = require('./fileWriter.js');
 const serialport = require('serialport');
+const util = require('util');
+const fs = require('fs');
 
 var dataLog = [];
 var connectCounter = 0;
@@ -41,16 +42,17 @@ console.log("listening on port:" + netPort);
 
 
 // Listeners
-io.sockets.on('connect', function() { connectCounter++; });
-io.sockets.on('disconnect', function() {
-    connectCounter--;
-    if (connectCounter === 0) {
-        saveData();
-    }
-});
 
 io.sockets.on('connection', function (socket) {
-    log.info('Client count: ' + connectCounter);
+	log.info('Client count: ' + ++connectCounter);
+
+	socket.on('disconnect', function() {
+	    log.info('Client count: ' + --connectCounter);
+	    if (connectCounter === 0) {
+		    writer(dataLog);
+	    }
+	});
+
 
     socket.on('control', function(data) {
         console.log(data);
@@ -75,23 +77,32 @@ io.sockets.on('connection', function (socket) {
 
 rl.on('line', function (input)  {
     if (input === 'save') {
-        saveData();
+	console.log("cmd: save");
+        writer(dataLog);
     } else {
         console.log("Command is not supported");
     }
 });
 
 
-function saveData() {
-    fileWriter.writeFile(JSON.stringify({data: dataLog}), function (result) {
-        if (result) {
-            console.log("Data saved into a file");
-            dataLog = [];
-        } else {
-            console.log(result);
-        }
+function writer (data) {
+    var now = new Date(),
+        d = now.getDate(),
+        m = now.getMonth(),
+        y = now.getFullYear(),
+        h = now.getHours(),
+        min = now.getMinutes(),
+        sec = now.getSeconds(),
+        mill = now.getMilliseconds(),
+        filename = __dirname + util.format('/launch-records/%s_%s_%s_%s_%s_%s_%s.json', d, m , y, h, min, sec, mill);
+	
+
+    fs.writeFile(filename, JSON.stringify(data), function (err) {
+        if (err) throw err;
+        console.log('data saved in /launch-records/' + filename);
     });
 }
+
 
 
 
