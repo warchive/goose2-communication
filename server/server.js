@@ -49,7 +49,7 @@ io.sockets.on('connection', function (socket) {
 	socket.on('disconnect', function() {
 	    log.info('Client count: ' + --connectCounter);
 	    if (connectCounter === 0) {
-		writer(dataLog);
+		    writer(dataLog);
 	    }
 	});
 

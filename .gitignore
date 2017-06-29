@@ -3,4 +3,3 @@ server/node_modules
 server/blackbox.log
 client/node_modules
 scraps.js
-server/launch-records
