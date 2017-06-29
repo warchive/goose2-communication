@@ -11,7 +11,6 @@ const util = require('util');
 const fs = require('fs');
 
 var dataLog = [];
-dataLog.push({val: "test"});
 var connectCounter = 0;
 
 // Set up cli
@@ -43,21 +42,17 @@ console.log("listening on port:" + netPort);
 
 
 // Listeners
-io.sockets.on('connect', function() { 
-    connectCounter++; 
-    log.info('Client count: ' + connectCounter);    
-});
-
-io.sockets.on('disconnect', function() {
-    log.info('Client count: ' + connectCounter);
-    connectCounter--;
-    if (connectCounter === 0) {
-        writer(dataLog);
-    }
-});
 
 io.sockets.on('connection', function (socket) {
-    log.info('Client count: ' + connectCounter);
+	log.info('Client count: ' + ++connectCounter);
+
+	socket.on('disconnect', function() {
+	    log.info('Client count: ' + --connectCounter);
+	    if (connectCounter === 0) {
+		writer(dataLog);
+	    }
+	});
+
 
     socket.on('control', function(data) {
         console.log(data);
@@ -99,11 +94,12 @@ function writer (data) {
         min = now.getMinutes(),
         sec = now.getSeconds(),
         mill = now.getMilliseconds(),
-        filename = util.format('server/launch-records/%s_%s_%s_%s_%s_%s_%s.json', d, m , y, h, min, sec, mill);
+        filename = __dirname + util.format('/launch-records/%s_%s_%s_%s_%s_%s_%s.json', d, m , y, h, min, sec, mill);
+	
 
     fs.writeFile(filename, JSON.stringify(data), function (err) {
         if (err) throw err;
-        console.log('It\'s saved! in same location.');
+        console.log('data saved in /launch-records/' + filename);
     });
 }
 
