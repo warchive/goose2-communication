@@ -53,13 +53,17 @@ function test() {
     socket.on('answer', function(data) {
         var response = JSON.parse(data).ans;
 
-        if (response.test === ans) {
+        if (listComp(response, ans)) {
             console.log("Test Successful");
         } else {
             console.log("Test Failed: Sent-> " + ans.length + " packages, Received-> " + response.length);
         }
     });
 
+}
+
+function listComp (a, b) {
+    return (a.length === b.length && a.every(function (u, i) {u === b[i];}))
 }
 
 function getRand() {
