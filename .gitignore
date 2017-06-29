@@ -1,2 +1,5 @@
-# Created by .ignore support plugin (hsz.mobi)
 .idea
+server/node_modules
+server/blackbox.log
+client/node_modules
+scraps.js
