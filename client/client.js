@@ -63,7 +63,7 @@ function test() {
 }
 
 function listComp (a, b) {
-    return (a.length === b.length && a.every(function (u, i) {u === b[i];}))
+    return (a.length === b.length && a.every(function (u, i) {return u === b[i];}))
 }
 
 function getRand() {
