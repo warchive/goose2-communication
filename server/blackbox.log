@@ -31,3 +31,27 @@
 2017-06-17 14:29:23.463 INFO  Established connection 
 2017-06-17 14:29:46.069 INFO  Established connection 
 2017-06-17 14:30:00.225 INFO  Established connection 
+2017-06-28 21:07:41.541 INFO  Client count: 1 
+2017-06-28 21:07:41.636 INFO  Successful cmd: {"Command":"Autonomous","Value":[1]} 
+2017-06-28 21:08:04.829 INFO  Client count: 0 
+2017-06-28 21:08:06.247 INFO  Client count: 1 
+2017-06-28 21:08:06.291 INFO  Successful cmd: {"Command":"Autonomous","Value":[1]} 
+2017-06-28 21:08:10.248 INFO  Client count: 0 
+2017-06-28 21:08:12.841 INFO  Client count: 1 
+2017-06-28 21:08:12.886 INFO  Successful cmd: {"Command":"Autonomous","Value":[1]} 
+2017-06-28 21:09:11.057 INFO  Client count: 0 
+2017-06-28 21:09:14.103 INFO  Client count: 1 
+2017-06-28 21:09:14.162 INFO  Successful cmd: {"Command":"Autonomous","Value":[1]} 
+2017-06-28 21:09:29.246 INFO  Client count: 0 
+2017-06-28 21:09:30.401 INFO  Client count: 1 
+2017-06-28 21:09:30.446 INFO  Successful cmd: {"Command":"Autonomous","Value":[1]} 
+2017-06-28 21:09:42.797 INFO  Client count: 0 
+2017-06-28 21:09:45.184 INFO  Client count: 1 
+2017-06-28 21:09:45.243 INFO  Successful cmd: {"Command":"Autonomous","Value":[1]} 
+2017-06-28 21:13:14.763 INFO  Client count: 0 
+2017-06-28 21:13:16.047 INFO  Client count: 1 
+2017-06-28 21:13:16.096 INFO  Successful cmd: {"Command":"Autonomous","Value":[1]} 
+2017-06-28 21:14:00.497 INFO  Client count: 0 
+2017-06-28 21:15:13.081 INFO  Client count: 1 
+2017-06-28 21:15:13.133 INFO  Successful cmd: {"Command":"Autonomous","Value":[1]} 
+2017-06-28 21:15:20.570 INFO  Client count: 0 
