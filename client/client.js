@@ -10,6 +10,8 @@ const rl = readLine.createInterface({
 rl.on('line', function (input)  {
     if (input === 'test') {
         test();
+    } else if (input === "save") {
+	socket.emit('save', "");
     } else {
         console.log("Command is not supported");
     }

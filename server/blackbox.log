@@ -84,3 +84,38 @@
 2017-06-29 07:54:03.635 INFO  data saved in /launch-records//home/pi/websocket/communication-system/server/launch-records/29_5_2017_7_54_3_629.json 
 2017-06-29 07:54:11.496 INFO  Client count: 0 
 2017-06-29 07:54:11.502 INFO  data saved in /launch-records//home/pi/websocket/communication-system/server/launch-records/29_5_2017_7_54_11_496.json 
+2017-06-29 08:04:24.812 INFO  Client count: 1 
+2017-06-29 08:04:24.813 INFO  Socket is open 
+2017-06-29 08:04:24.902 INFO  Successful cmd: {"Command":"Autonomous","Value":[1]} 
+2017-06-29 08:09:33.152 INFO  Client count: 0 
+2017-06-29 08:09:33.350 INFO  data saved in /launch-records//home/pi/websocket/communication-system/server/launch-records/29_5_2017_8_9_33_154.json 
+2017-06-29 08:09:34.760 INFO  Client count: 1 
+2017-06-29 08:09:34.761 INFO  Socket is open 
+2017-06-29 08:09:34.814 INFO  Successful cmd: {"Command":"Autonomous","Value":[1]} 
+2017-06-29 08:13:04.855 INFO  Client count: 0 
+2017-06-29 08:13:05.204 INFO  data saved in /launch-records//home/pi/websocket/communication-system/server/launch-records/29_5_2017_8_13_4_856.json 
+2017-06-29 08:13:17.840 INFO  Client count: 1 
+2017-06-29 08:13:17.840 INFO  Socket is open 
+2017-06-29 08:13:17.927 INFO  Successful cmd: {"Command":"Autonomous","Value":[1]} 
+2017-06-29 08:13:19.874 INFO  Client count: 0 
+2017-06-29 08:13:20.284 INFO  data saved in /launch-records//home/pi/websocket/communication-system/server/launch-records/29_5_2017_8_13_19_874.json 
+2017-06-29 08:17:54.779 INFO  Client count: 1 
+2017-06-29 08:17:54.779 INFO  Socket is open 
+2017-06-29 08:17:54.959 INFO  Successful cmd: {"Command":"Autonomous","Value":[1]} 
+2017-06-29 08:19:06.445 INFO  Client count: 0 
+2017-06-29 08:19:07.150 INFO  data saved in /launch-records//home/pi/websocket/communication-system/server/launch-records/29_5_2017_8_19_6_446.json 
+2017-06-29 08:23:02.040 INFO  Client count: 1 
+2017-06-29 08:23:02.040 INFO  Socket is open 
+2017-06-29 08:23:02.104 INFO  Successful cmd: {"Command":"Autonomous","Value":[1]} 
+2017-06-29 08:24:54.134 INFO  Client count: 0 
+2017-06-29 08:24:55.402 INFO  data saved in /launch-records//home/pi/websocket/communication-system/server/launch-records/29_5_2017_8_24_54_135.json 
+2017-06-29 08:17:38.629 INFO  Client count: 1 
+2017-06-29 08:17:38.630 INFO  Socket is open 
+2017-06-29 08:17:38.705 INFO  Successful cmd: {"Command":"Autonomous","Value":[1]} 
+2017-06-29 08:17:53.844 INFO  Client count: 0 
+2017-06-29 08:17:53.857 INFO  data saved in /launch-records//home/pi/websocket/communication-system/server/launch-records/29_5_2017_8_17_53_845.json 
+2017-06-29 08:17:55.487 INFO  Client count: 1 
+2017-06-29 08:17:55.488 INFO  Socket is open 
+2017-06-29 08:17:55.529 INFO  Successful cmd: {"Command":"Autonomous","Value":[1]} 
+2017-06-29 08:39:00.596 INFO  Client count: 0 
+2017-06-29 08:39:00.657 INFO  data saved in /launch-records//home/pi/websocket/communication-system/server/launch-records/29_5_2017_8_39_0_596.json 
