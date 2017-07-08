@@ -12,7 +12,12 @@ rl.on('line', function (input)  {
         test();
     } else if (input === "save") {
 	socket.emit('save', "");
-    } else {
+    } else if (input === "bv on") {
+        socket.emit('control', JSON.stringify({cmd: "spd", Value: [1]}));
+    } else if (input === "bv off") {
+        socket.emit('control', JSON.stringify({cmd: "spd", Value: [0]}));
+    }
+    else {
         console.log("Command is not supported");
     }
 });
@@ -36,7 +41,7 @@ socket.on('disconnect', function(){
 });
 
 // this is how we write to the socket
-socket.emit('control', JSON.stringify({Command: "Autonomous", Value: [1]}));
+// socket.emit('control', JSON.stringify({Command: "Autonomous", Value: [1]}));
 
 
 function test() {
