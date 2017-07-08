@@ -1,5 +1,7 @@
 .idea
-server/node_modules
-server/blackbox.log
 client/node_modules
 scraps.js
+.gitignore
+README.md
+client/node_modules
+server/node_modules
