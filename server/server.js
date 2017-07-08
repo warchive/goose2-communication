@@ -69,11 +69,12 @@ io.sockets.on('connection', function (socket) {
 
     socket.on('control', function(data) {
         console.log(data);
-        port.write('main screen turn on', function(err) {
+        port.write("command", function(err) {
             if (err) {
                 log.error('Failed to send data over serial port: ', err.message, ' data: ', data);
             } else {
                 log.info('Successful cmd: ', data);
+                console.log(data);
             }
         });
     });
