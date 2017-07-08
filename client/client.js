@@ -13,9 +13,9 @@ rl.on('line', function (input)  {
     } else if (input === "save") {
 	socket.emit('save', "");
     } else if (input === "bv on") {
-        socket.emit('control', JSON.stringify({cmd: "spd", Value: [1]}));
+        socket.emit('control', JSON.stringify({cmd: "spd", val: [1]}));
     } else if (input === "bv off") {
-        socket.emit('control', JSON.stringify({cmd: "spd", Value: [0]}));
+        socket.emit('control', JSON.stringify({cmd: "spd", val: [0]}));
     }
     else {
         console.log("Command is not supported");
