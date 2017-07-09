@@ -1,6 +1,5 @@
 'use strict';
 
-
 const express = require('express');  //web server
 const readLine = require('readline');
 const app = express();
@@ -69,7 +68,7 @@ io.sockets.on('connection', function (socket) {
 
     socket.on('control', function(data) {
         console.log(data);
-        port.write("command", function(err) {
+        port.write(data, function(err) {
             if (err) {
                 log.error('Failed to send data over serial port: ', err.message, ' data: ', data);
             } else {
@@ -82,12 +81,14 @@ io.sockets.on('connection', function (socket) {
     socket.on('save', function(data) {
         writer(dataLog);
         log.info("save triggered from client");
+	socket.emit("saved file");
     });
 
     port.on('data', function(data) { // triggered every time there is data coming from the serial port
-        socket.broadcast.emit('pi', data); // this is what actually sensor reading messages through the websocket
-        dataLog.push({val: data});
-        // by specifying 'pi', i'm obligated to listen to pi events ont he client side
+	console.log(data);
+	socket.broadcast.emit('pi', data); // this is what actually sensor reading messages through the websocket
+	dataLog.push({val: data});
+	console.log(data);
     });
 
     log.info('Socket is open'); // log to console, once serial connection is established
