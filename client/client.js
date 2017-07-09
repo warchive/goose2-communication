@@ -1,7 +1,11 @@
-var socket = require('socket.io-client')('http://192.168.1.142:8002'); // ip will probably change all the time
+const socket = require('socket.io-client')('http://192.168.1.143:8002'); // ip will probably change all the time
 const readLine = require('readline');
 
-// Set up cli
+var counter = 0;
+var firstCounter = 0;
+const COUNTER_CHECK = 60;
+var PRINT_RATE = true;
+
 const rl = readLine.createInterface({
     input: process.stdin,
     output: process.stdout
@@ -11,18 +15,28 @@ rl.on('line', function (input)  {
     if (input === 'test') {
         test();
     } else if (input === "save") {
-	socket.emit('save', "");
+        socket.emit('save', "");
+    } else if (input === "ping") {
+        var now = new Date();
+        socket.emit('ping', JSON.stringify({mills: now.getMilliseconds()}));
     } else if (input === "bv on") {
-        socket.emit('control', JSON.stringify({cmd: "spd", val: [1]}));
+        socket.emit('control', JSON.stringify({cmd: "bv", val: [1]}));
     } else if (input === "bv off") {
-        socket.emit('control', JSON.stringify({cmd: "spd", val: [0]}));
-    }
-    else {
+        socket.emit('control', JSON.stringify({cmd: "bv", val: [0]}));
+    } else if (input === "dpr on") {
+        socket.emit('control', JSON.stringify({cmd: "dpr", val: [1]}));
+    } else if (input === "dpr off") {
+        socket.emit('control', JSON.stringify({cmd: "dpr", val: [0]}));
+    } else if (input === "show rate") {
+        PRINT_RATE = true;
+    } else if (input === "hide rate") {
+        PRINT_RATE = false;
+    } else {
         console.log("Command is not supported");
     }
 });
 
-socket.on('connect', function(){
+socket.on('connect', function() {
     console.log("connected");
 });
 
@@ -30,19 +44,40 @@ socket.on('event', function(data){
     console.log(data);
 });
 
-socket.on('pi', function(data){ // so this is our main listener.
-    // when we emit a message on the server side, we can specify what type of message it is
-    // its called pi in this case, but can be anything else
-    console.log(data);
+socket.on('ping', function(data) {
+    // var parsed = JSON.stringify(data);
+    // console.log(parsed);
+    // var now = new Date();
+    // console.log("ping: " + (parsed.mills) + "ms");
 });
 
-socket.on('disconnect', function(){
+socket.on('pi', function(data) {
+    var parsed = JSON.parse(data);
+
+    // console.log(data);
+
+    if (parsed.sensor === 'gyro') {
+        counter ++;
+        printHB(parsed);
+    }
+
+    // {"time":"1009", "sensor":"imu", "data": [1, 2, 3], "check": 2}
+});
+
+socket.on('disconnect', function() {
     console.log("disconnected");
 });
 
-// this is how we write to the socket
-// socket.emit('control', JSON.stringify({Command: "Autonomous", Value: [1]}));
+function printHB(parsed) {
+    if (counter === COUNTER_CHECK) {
+        if (PRINT_RATE) {
+            console.log("comm rate: " + (parsed.check - firstCounter) + "/" + COUNTER_CHECK);
+        }
 
+        firstCounter = parsed.check;
+        counter = 0;
+    }
+}
 
 function test() {
     const CHECK_VAL = 13;
