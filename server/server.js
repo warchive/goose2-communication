@@ -12,6 +12,9 @@ const fs = require('fs');
 
 var dataLog = [];
 var connectCounter = 0;
+var hbeat = 0;
+var oldDate = new Date();
+
 
 // Set up cli
 const rl = readLine.createInterface({
@@ -32,12 +35,16 @@ var parsers = serialport.parsers;
 var port = new SerialPort("/dev/ttyACM0", { // if you get an error that this file does not exist,
     // make sure that you plug in the Arduino via a serial port first. That will create the file in rpi
     baudrate: 115200,
-    parser: parsers.readline('\r\n')
+    parser: parsers.readline('\n')
+});
+
+port.on('open', function () {
+    console.log("open port");
 });
 
 // Server Setup
 const netPort = 8002;
-server.listen(netPort); // start the web server on port 8080
+server.listen(netPort);
 console.log("listening on port:" + netPort);
 
 
@@ -78,6 +85,10 @@ io.sockets.on('connection', function (socket) {
         });
     });
 
+    socket.on('ping', function(data) {
+	socket.emit('ping', data);
+    });
+
     socket.on('save', function(data) {
         writer(dataLog);
         log.info("save triggered from client");
@@ -85,10 +96,10 @@ io.sockets.on('connection', function (socket) {
     });
 
     port.on('data', function(data) { // triggered every time there is data coming from the serial port
-	console.log(data);
-	socket.broadcast.emit('pi', data); // this is what actually sensor reading messages through the websocket
-	dataLog.push({val: data});
-	console.log(data);
+        // console.log(data);	
+	 socket.emit('pi', data); // this is what actually sensor reading messages through the websocket
+	 dataLog.push({val: data});
+//	 console.log(data);
     });
 
     log.info('Socket is open'); // log to console, once serial connection is established
@@ -96,7 +107,7 @@ io.sockets.on('connection', function (socket) {
 });
 
 
-rl.on('line', function (input)  {
+rl.on('line', function (input) {
     if (input === 'save') {
         writer(dataLog);
     } else {
