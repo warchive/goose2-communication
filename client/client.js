@@ -20,9 +20,13 @@ rl.on('line', function (input)  {
         var now = new Date();
         socket.emit('ping', JSON.stringify({mills: now.getMilliseconds()}));
     } else if (input === "bv on") {
-        socket.emit('control', JSON.stringify({cmd: "spd", val: [1]}));
+        socket.emit('control', JSON.stringify({cmd: "bv", val: [1]}));
     } else if (input === "bv off") {
-        socket.emit('control', JSON.stringify({cmd: "spd", val: [0]}));
+        socket.emit('control', JSON.stringify({cmd: "bv", val: [0]}));
+    } else if (input === "dpr on") {
+        socket.emit('control', JSON.stringify({cmd: "dpr", val: [1]}));
+    } else if (input === "dpr off") {
+        socket.emit('control', JSON.stringify({cmd: "dpr", val: [0]}));
     } else if (input === "show rate") {
         PRINT_RATE = true;
     } else if (input === "hide rate") {
@@ -40,14 +44,17 @@ socket.on('event', function(data){
     console.log(data);
 });
 
-socket.on('ping', function(data){
-    var parsed = JSON.stringify(data);
-    var now = new Date();
-    console.log("ping: " + (now.getMilliseconds() - parsed.mills) + "ms");
+socket.on('ping', function(data) {
+    // var parsed = JSON.stringify(data);
+    // console.log(parsed);
+    // var now = new Date();
+    // console.log("ping: " + (parsed.mills) + "ms");
 });
 
 socket.on('pi', function(data) {
     var parsed = JSON.parse(data);
+
+    // console.log(data);
 
     if (parsed.sensor === 'gyro') {
         counter ++;
@@ -61,17 +68,15 @@ socket.on('disconnect', function() {
     console.log("disconnected");
 });
 
-// this is how we write to the socket
-// socket.emit('control', JSON.stringify({Command: "Autonomous", Value: [1]}));
-
 function printHB(parsed) {
     if (counter === COUNTER_CHECK) {
         if (PRINT_RATE) {
             console.log("comm rate: " + (parsed.check - firstCounter) + "/" + COUNTER_CHECK);
         }
+
+        firstCounter = parsed.check;
+        counter = 0;
     }
-    firstCounter = parsed.check;
-    counter = 0;
 }
 
 function test() {
