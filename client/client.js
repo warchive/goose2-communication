@@ -1,38 +1,37 @@
-const socket = require('socket.io-client')('http://192.168.1.143:8002'); // ip will probably change all the time
+const socket = require('socket.io-client')('http://192.168.1.142:8002'); // ip will probably change all the time
 const readLine = require('readline');
 
 var counter = 0;
 var firstCounter = 0;
 const COUNTER_CHECK = 60;
-var PRINT_RATE = true;
+var PRINT_RATE = false;
 
 const rl = readLine.createInterface({
     input: process.stdin,
     output: process.stdout
 });
 
+const cmds = {
+    "test": function () {test();},
+    "save data": function () {socket.emit('s_save', "");}, // to start saving
+    "start data": function () {socket.emit('e_save', "");}, // to finish saving
+    "bv on": function () {socket.emit('control', JSON.stringify({cmd: "bv", val: [1]}));},
+    "bv off": function () {socket.emit('control', JSON.stringify({cmd: "bv", val: [0]}));},
+    "dpr on": function () {socket.emit('control', JSON.stringify({cmd: "dpr", val: [0]}));},
+    "dpr off": function () {socket.emit('control', JSON.stringify({cmd: "dpr", val: [1]}));},
+    "start": function () {socket.emit('control', JSON.stringify({cmd: "scpt", val: [1]}));},
+    "stop": function () {socket.emit('control', JSON.stringify({cmd: "scpt", val: [0]}));},
+    "restart serial": function () {socket.emit('restart_s', "")}, // restarting serial port on Arduino
+    "ping": function () {PRINT_RATE = true;}
+};
+
 rl.on('line', function (input)  {
-    if (input === 'test') {
-        test();
-    } else if (input === "save") {
-        socket.emit('save', "");
-    } else if (input === "ping") {
-        var now = new Date();
-        socket.emit('ping', JSON.stringify({mills: now.getMilliseconds()}));
-    } else if (input === "bv on") {
-        socket.emit('control', JSON.stringify({cmd: "bv", val: [1]}));
-    } else if (input === "bv off") {
-        socket.emit('control', JSON.stringify({cmd: "bv", val: [0]}));
-    } else if (input === "dpr on") {
-        socket.emit('control', JSON.stringify({cmd: "dpr", val: [1]}));
-    } else if (input === "dpr off") {
-        socket.emit('control', JSON.stringify({cmd: "dpr", val: [0]}));
-    } else if (input === "show rate") {
-        PRINT_RATE = true;
-    } else if (input === "hide rate") {
-        PRINT_RATE = false;
-    } else {
+    try {
+        cmds[input]();
+    }
+    catch (e) {
         console.log("Command is not supported");
+        console.log("Available commands: " + Object.keys(cmds));
     }
 });
 
@@ -42,13 +41,6 @@ socket.on('connect', function() {
 
 socket.on('event', function(data){
     console.log(data);
-});
-
-socket.on('ping', function(data) {
-    // var parsed = JSON.stringify(data);
-    // console.log(parsed);
-    // var now = new Date();
-    // console.log("ping: " + (parsed.mills) + "ms");
 });
 
 socket.on('pi', function(data) {
@@ -73,7 +65,7 @@ function printHB(parsed) {
         if (PRINT_RATE) {
             console.log("comm rate: " + (parsed.check - firstCounter) + "/" + COUNTER_CHECK);
         }
-
+        PRINT_RATE = false;
         firstCounter = parsed.check;
         counter = 0;
     }
@@ -91,21 +83,6 @@ function test() {
         ans.push(num + CHECK_VAL);
     }
     socket.emit('checkSum', JSON.stringify({test: checkSum}));
-
-    socket.on('answer', function(data) {
-        var response = JSON.parse(data).ans;
-
-        if (listComp(response, ans)) {
-            console.log("Test Successful");
-        } else {
-            console.log("Test Failed: Sent-> " + ans.length + " packages, Received-> " + response.length);
-        }
-    });
-
-}
-
-function listComp (a, b) {
-    return (a.length === b.length && a.every(function (u, i) {return u === b[i];}))
 }
 
 function getRand() {
