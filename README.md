@@ -18,5 +18,8 @@ Notes:
  - Navigate to `/client`
  - Run `npm install` (make sure you have a working internet connection)
  - Run `node client.js` to run the server
- 
- 
+
+# Communication format
+
+* Only certain commands and certain types of data is sent through the communication pipeline
+* Find information about it [here](https://github.com/teamwaterloop/communication-system/communication_format.html)
