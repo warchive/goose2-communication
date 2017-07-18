@@ -22,4 +22,4 @@ Notes:
 # Communication format
 
 * Only certain commands and certain types of data is sent through the communication pipeline
-* Find information about it [here](https://github.com/teamwaterloop/communication-system/communication_format.html)
+* Find information about it [here](http://htmlpreview.github.io/?https://github.com/teamwaterloop/communication-system/blob/master/communication_format.html)
