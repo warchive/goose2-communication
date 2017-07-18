@@ -8,10 +8,12 @@ const SimpleNodeLogger = require('simple-node-logger');
 const serialport = require('serialport');
 const util = require('util');
 const fs = require('fs');
+const BUFFER = 500;
 
 var dataLog = [];
 var connectCounter = 0;
 var RAW_OUT = false;
+var timer = null;
 
 // Logger
 const log = SimpleNodeLogger.createSimpleLogger({
@@ -25,7 +27,9 @@ var parsers = serialport.parsers;
 
 var port = getNewPort();
 
-port.on('open', function () {console.log("Open Serial Port");});
+port.on('open', function () {
+    console.log("Open Serial Port");
+});
 
 // Server Setup
 const netPort = 8002;
@@ -40,7 +44,7 @@ io.sockets.on('connection', function (socket) {
     socket.on('disconnect', function() {
         log.info('Client count: ' + --connectCounter);
         if (connectCounter === 0) {
-	        writer(dataLog);
+            writer(dataLog);
         }
     });
 
@@ -56,27 +60,56 @@ io.sockets.on('connection', function (socket) {
         });
     });
 
+    socket.on('connect_ar', function(data) {
+        port.write(data, function(err) {
+            if (err) {
+                log.error('Failed to send data over serial port: ', err.message, ' data: ', data);
+            } else {
+                log.info('Successful cmd: ', data);
+                console.log(data);
+            }
+        });
+
+        if (timer !== null) {
+            timer.clearInterval();
+        }
+
+        timer = setInterval(function () {
+            port.write(JSON.stringify({cmd: "check", val:[1]}));
+        }, 400);
+    });
+
     socket.on('ping', function(data) {
-	    socket.emit('ping', data);
+        socket.emit('ping', data);
+    });
+
+    socket.on('trigger_save', function() {
+        writer(dataLog);
+        log.info("save triggered from client");
+        socket.emit("saved file");
     });
 
     socket.on('save', function(data) {
-        writer(dataLog);
-        log.info("save triggered from client");
-	    socket.emit("saved file");
+        if (data === 1) {
+            RAW_OUT = true;
+            console.log("started writing data to a file");
+        } else {
+            RAW_OUT = false;
+            console.log("stopped writing data to a file");
+        }
     });
-
-    socket.on('restart_S', function(data) {
-        port = getNewPort();
-    });
-
-    socket.on('s_save', function() {RAW_OUT = true;});
-    socket.on('e_save', function() {RAW_OUT = false;});
 
     port.on('data', function(data) {
-        // console.log(data);
+        console.log(data);
         socket.emit('pi', data);
-        if (RAW_OUT) {dataLog.push({val: data});}
+        if (RAW_OUT) {
+            dataLog.push(data);
+            if (dataLog.length === BUFFER) {
+                console.log("saved 500 lines into a file");
+                writer(dataLog);
+                dataLog = [];
+            }
+        }
     });
 
     log.info('Socket is open');
@@ -93,7 +126,7 @@ function writer (data) {
         sec = now.getSeconds(),
         mill = now.getMilliseconds(),
         filename = __dirname + util.format('/launch-records/%s_%s_%s_%s_%s_%s_%s.json', d, m , y, h, min, sec, mill);
-	
+
 
     fs.writeFile(filename, JSON.stringify(data), function (err) {
         if (err) throw err;
