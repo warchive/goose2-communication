@@ -12,17 +12,26 @@ const rl = readLine.createInterface({
 });
 
 const cmds = {
-    "test": function () {test();},
-    "save data": function () {socket.emit('s_save', "");}, // to start saving
-    "start data": function () {socket.emit('e_save', "");}, // to finish saving
+    // run connection test
+    "ping": function () {PRINT_RATE = true;},
+
+    // tell arduino to start writing to serial port
+    "ar start": function () {socket.emit('connect_ar', JSON.stringify({cmd: "connect", val: [1]}));}, // to start saving
+
+    // start/stop saving data
+    "data stop": function () {socket.emit('save', 0);}, // to start saving
+    "data start": function () {socket.emit('save', 1);}, // to stop writing to file
+    "data save": function () {socket.emit('trigger_save');}, // to save into file
+
+    // controls
     "bv on": function () {socket.emit('control', JSON.stringify({cmd: "bv", val: [1]}));},
     "bv off": function () {socket.emit('control', JSON.stringify({cmd: "bv", val: [0]}));},
     "dpr on": function () {socket.emit('control', JSON.stringify({cmd: "dpr", val: [0]}));},
     "dpr off": function () {socket.emit('control', JSON.stringify({cmd: "dpr", val: [1]}));},
+    // "restart serial": function () {socket.emit('restart_S', "")}, // restarting serial port on Arduino
+
     "start": function () {socket.emit('control', JSON.stringify({cmd: "scpt", val: [1]}));},
-    "stop": function () {socket.emit('control', JSON.stringify({cmd: "scpt", val: [0]}));},
-    "restart serial": function () {socket.emit('restart_s', "")}, // restarting serial port on Arduino
-    "ping": function () {PRINT_RATE = true;}
+    "stop": function () {socket.emit('control', JSON.stringify(	{cmd: "scpt", val: [0]}));}
 };
 
 rl.on('line', function (input)  {
@@ -53,6 +62,9 @@ socket.on('pi', function(data) {
         printHB(parsed);
     }
 
+    if (parsed.sensor === 'start') {
+        console.log("arduino connected");
+    }
     // {"time":"1009", "sensor":"imu", "data": [1, 2, 3], "check": 2}
 });
 

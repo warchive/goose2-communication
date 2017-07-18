@@ -1675,3 +1675,213 @@
 2017-07-10 15:48:48.845 INFO  Socket is open 
 2017-07-10 15:50:59.070 INFO  Client count: 0 
 2017-07-10 15:50:59.077 INFO  data saved in /launch-records//home/pi/websocket/communication-system/server/launch-records/10_6_2017_15_50_59_70.json 
+2017-07-11 20:13:15.151 INFO  Client count: 1 
+2017-07-11 20:13:15.153 INFO  Socket is open 
+2017-07-11 20:14:40.068 INFO  Client count: 0 
+2017-07-11 20:14:40.080 INFO  data saved in /launch-records//home/pi/websocket/communication-system/server/launch-records/11_6_2017_20_14_40_69.json 
+2017-07-15 09:18:40.462 INFO  Client count: 1 
+2017-07-15 09:18:40.464 INFO  Socket is open 
+2017-07-15 09:34:49.848 INFO  connected to arduino 
+2017-07-15 09:34:56.447 INFO  Client count: 1 
+2017-07-15 09:34:56.450 INFO  Socket is open 
+2017-07-15 09:34:59.793 INFO  Client count: 0 
+2017-07-15 09:34:59.806 INFO  data saved in /launch-records//home/pi/websocket/communication-system/server/launch-records/15_6_2017_9_34_59_794.json 
+2017-07-15 09:37:08.935 INFO  connected to arduino 
+2017-07-15 09:37:10.069 INFO  Client count: 1 
+2017-07-15 09:37:10.072 INFO  Socket is open 
+2017-07-15 09:37:18.828 INFO  Client count: 0 
+2017-07-15 09:37:18.845 INFO  data saved in /launch-records//home/pi/websocket/communication-system/server/launch-records/15_6_2017_9_37_18_829.json 
+2017-07-15 09:38:41.610 INFO  Client count: 1 
+2017-07-15 09:38:41.611 INFO  Socket is open 
+2017-07-15 09:40:09.888 INFO  Client count: 0 
+2017-07-15 09:40:09.896 INFO  data saved in /launch-records//home/pi/websocket/communication-system/server/launch-records/15_6_2017_9_40_9_888.json 
+2017-07-15 09:40:20.846 INFO  Client count: 1 
+2017-07-15 09:40:20.847 INFO  Socket is open 
+2017-07-15 09:40:43.228 INFO  connected to arduino 
+2017-07-15 09:40:44.404 INFO  Client count: 1 
+2017-07-15 09:40:44.407 INFO  Socket is open 
+2017-07-15 09:40:55.456 INFO  Successful cmd: {"cmd":"scpt","val":[1]} 
+2017-07-15 09:41:33.029 INFO  connected to arduino 
+2017-07-15 09:41:33.546 INFO  Client count: 1 
+2017-07-15 09:41:33.549 INFO  Socket is open 
+2017-07-15 09:41:55.019 INFO  Successful cmd: {"cmd":"scpt","val":[1]} 
+2017-07-15 09:47:19.754 INFO  connected to arduino 
+2017-07-15 09:47:20.079 INFO  Client count: 1 
+2017-07-15 09:47:20.082 INFO  Socket is open 
+2017-07-15 09:47:43.728 INFO  Successful cmd: {"cmd":"scpt","val":[1]} 
+2017-07-15 09:53:20.271 INFO  connected to arduino 
+2017-07-15 09:53:20.932 INFO  Client count: 1 
+2017-07-15 09:53:20.934 INFO  Socket is open 
+2017-07-15 09:53:33.136 INFO  Successful cmd: {"cmd":"scpt","val":[1]} 
+2017-07-15 10:01:18.604 INFO  connected to arduino 
+2017-07-15 10:01:22.881 INFO  Client count: 1 
+2017-07-15 10:01:22.884 INFO  Socket is open 
+2017-07-15 10:02:39.085 INFO  Successful cmd: {"cmd":"scpt","val":[1]} 
+2017-07-15 10:05:43.967 INFO  connected to arduino 
+2017-07-15 10:05:44.491 INFO  Client count: 1 
+2017-07-15 10:05:44.494 INFO  Socket is open 
+2017-07-15 10:05:53.867 INFO  Client count: 0 
+2017-07-15 10:05:53.888 INFO  data saved in /launch-records//home/pi/websocket/communication-system/server/launch-records/15_6_2017_10_5_53_868.json 
+2017-07-15 10:11:57.254 INFO  Client count: 1 
+2017-07-15 10:11:57.257 INFO  Socket is open 
+2017-07-15 10:12:06.151 INFO  Client count: 2 
+2017-07-15 10:12:06.152 INFO  Socket is open 
+2017-07-15 10:12:06.610 INFO  Client count: 1 
+2017-07-15 10:13:07.539 INFO  Client count: 2 
+2017-07-15 10:13:07.540 INFO  Socket is open 
+2017-07-15 10:13:11.419 INFO  Client count: 3 
+2017-07-15 10:13:11.420 INFO  Socket is open 
+2017-07-15 10:13:22.162 INFO  Client count: 2 
+2017-07-15 10:14:31.637 INFO  Client count: 1 
+2017-07-15 10:14:31.639 INFO  Socket is open 
+2017-07-15 10:14:37.310 INFO  Client count: 0 
+2017-07-15 10:14:37.330 INFO  data saved in /launch-records//home/pi/websocket/communication-system/server/launch-records/15_6_2017_10_14_37_311.json 
+2017-07-15 10:14:40.684 INFO  Client count: 1 
+2017-07-15 10:14:40.685 INFO  Socket is open 
+2017-07-15 10:16:05.674 INFO  Client count: 0 
+2017-07-15 10:16:05.683 INFO  data saved in /launch-records//home/pi/websocket/communication-system/server/launch-records/15_6_2017_10_16_5_674.json 
+2017-07-15 10:17:57.050 INFO  Client count: 1 
+2017-07-15 10:17:57.051 INFO  Socket is open 
+2017-07-15 10:18:12.180 INFO  Client count: 1 
+2017-07-15 10:18:12.182 INFO  Socket is open 
+2017-07-15 10:18:20.224 INFO  Client count: 0 
+2017-07-15 10:18:20.242 INFO  data saved in /launch-records//home/pi/websocket/communication-system/server/launch-records/15_6_2017_10_18_20_225.json 
+2017-07-15 10:18:25.320 INFO  Client count: 1 
+2017-07-15 10:18:25.322 INFO  Socket is open 
+2017-07-15 10:18:37.631 INFO  Successful cmd: {"cmd":"connect","val":[1]} 
+2017-07-15 10:18:38.171 INFO  Client count: 0 
+2017-07-15 10:18:38.183 INFO  data saved in /launch-records//home/pi/websocket/communication-system/server/launch-records/15_6_2017_10_18_38_172.json 
+2017-07-15 10:21:17.801 INFO  Client count: 1 
+2017-07-15 10:21:17.803 INFO  Socket is open 
+2017-07-15 10:21:28.714 INFO  Successful cmd: {"cmd":"connect","val":[1]} 
+2017-07-15 10:21:28.801 INFO  Client count: 0 
+2017-07-15 10:21:28.819 INFO  data saved in /launch-records//home/pi/websocket/communication-system/server/launch-records/15_6_2017_10_21_28_802.json 
+2017-07-15 10:23:05.879 INFO  Client count: 1 
+2017-07-15 10:23:05.881 INFO  Socket is open 
+2017-07-15 10:23:10.322 INFO  Successful cmd: {"cmd":"connect","val":[1]} 
+2017-07-15 10:23:10.632 INFO  Client count: 0 
+2017-07-15 10:23:10.668 INFO  data saved in /launch-records//home/pi/websocket/communication-system/server/launch-records/15_6_2017_10_23_10_633.json 
+2017-07-15 10:23:41.779 INFO  Client count: 1 
+2017-07-15 10:23:41.782 INFO  Socket is open 
+2017-07-15 10:23:45.656 INFO  Successful cmd: {"cmd":"connect","val":[1]} 
+2017-07-15 10:23:54.756 INFO  Client count: 0 
+2017-07-15 10:23:54.775 INFO  data saved in /launch-records//home/pi/websocket/communication-system/server/launch-records/15_6_2017_10_23_54_757.json 
+2017-07-15 10:23:59.310 INFO  Client count: 1 
+2017-07-15 10:23:59.311 INFO  Socket is open 
+2017-07-15 10:24:05.292 INFO  Client count: 0 
+2017-07-15 10:24:05.304 INFO  data saved in /launch-records//home/pi/websocket/communication-system/server/launch-records/15_6_2017_10_24_5_292.json 
+2017-07-15 10:24:23.006 INFO  Client count: 1 
+2017-07-15 10:24:23.008 INFO  Socket is open 
+2017-07-15 10:24:49.340 INFO  Successful cmd: {"cmd":"connect","val":[1]} 
+2017-07-15 10:24:49.445 INFO  Client count: 0 
+2017-07-15 10:24:49.470 INFO  data saved in /launch-records//home/pi/websocket/communication-system/server/launch-records/15_6_2017_10_24_49_446.json 
+2017-07-15 10:25:03.762 INFO  Client count: 1 
+2017-07-15 10:25:03.764 INFO  Socket is open 
+2017-07-15 10:26:28.744 INFO  Client count: 0 
+2017-07-15 10:26:28.751 INFO  data saved in /launch-records//home/pi/websocket/communication-system/server/launch-records/15_6_2017_10_26_28_744.json 
+2017-07-15 10:26:59.750 INFO  Client count: 1 
+2017-07-15 10:26:59.752 INFO  Socket is open 
+2017-07-15 10:27:08.061 INFO  Successful cmd: {"cmd":"connect","val":[1]} 
+2017-07-15 10:28:49.483 INFO  Client count: 1 
+2017-07-15 10:28:49.485 INFO  Socket is open 
+2017-07-15 10:28:59.455 INFO  Successful cmd: {"cmd":"connect","val":[1]} 
+2017-07-15 10:28:59.730 INFO  Client count: 0 
+2017-07-15 10:28:59.752 INFO  data saved in /launch-records//home/pi/websocket/communication-system/server/launch-records/15_6_2017_10_28_59_731.json 
+2017-07-15 10:51:39.775 INFO  Client count: 1 
+2017-07-15 10:51:39.778 INFO  Socket is open 
+2017-07-15 10:51:56.052 INFO  Successful cmd: {"cmd":"connect","val":[1]} 
+2017-07-15 10:51:57.994 INFO  Client count: 0 
+2017-07-15 10:51:58.021 INFO  data saved in /launch-records//home/pi/websocket/communication-system/server/launch-records/15_6_2017_10_51_57_995.json 
+2017-07-15 10:52:01.448 INFO  Client count: 1 
+2017-07-15 10:52:01.449 INFO  Socket is open 
+2017-07-15 10:53:02.213 INFO  Client count: 1 
+2017-07-15 10:53:02.216 INFO  Socket is open 
+2017-07-15 10:53:17.535 INFO  Successful cmd: {"cmd":"connect","val":[1]} 
+2017-07-15 10:53:19.378 INFO  Client count: 0 
+2017-07-15 10:53:19.403 INFO  data saved in /launch-records//home/pi/websocket/communication-system/server/launch-records/15_6_2017_10_53_19_379.json 
+2017-07-15 10:54:34.267 INFO  Client count: 1 
+2017-07-15 10:54:34.270 INFO  Socket is open 
+2017-07-15 10:54:53.599 INFO  Successful cmd: {"cmd":"connect","val":[1]} 
+2017-07-15 10:54:55.043 INFO  Client count: 0 
+2017-07-15 10:54:55.059 INFO  data saved in /launch-records//home/pi/websocket/communication-system/server/launch-records/15_6_2017_10_54_55_44.json 
+2017-07-15 10:56:47.342 INFO  Client count: 1 
+2017-07-15 10:56:47.344 INFO  Socket is open 
+2017-07-15 10:56:58.612 INFO  Successful cmd: {"cmd":"connect","val":[1]} 
+2017-07-15 10:56:58.845 INFO  Client count: 0 
+2017-07-15 10:56:58.876 INFO  data saved in /launch-records//home/pi/websocket/communication-system/server/launch-records/15_6_2017_10_56_58_847.json 
+2017-07-15 11:02:41.053 INFO  Client count: 1 
+2017-07-15 11:02:41.055 INFO  Socket is open 
+2017-07-15 11:02:59.265 INFO  Successful cmd: {"cmd":"connect","val":[1]} 
+2017-07-15 11:08:26.139 INFO  Client count: 1 
+2017-07-15 11:08:26.142 INFO  Socket is open 
+2017-07-15 11:08:53.105 INFO  Client count: 1 
+2017-07-15 11:08:53.107 INFO  Socket is open 
+2017-07-15 11:09:01.991 INFO  Successful cmd: {"cmd":"connect","val":[1]} 
+2017-07-15 11:09:35.373 INFO  Client count: 1 
+2017-07-15 11:09:35.375 INFO  Socket is open 
+2017-07-15 11:09:42.395 INFO  Successful cmd: {"cmd":"connect","val":[1]} 
+2017-07-15 11:11:07.014 INFO  Client count: 0 
+2017-07-15 11:11:07.028 INFO  data saved in /launch-records//home/pi/websocket/communication-system/server/launch-records/15_6_2017_11_11_7_15.json 
+2017-07-15 11:11:07.412 INFO  Client count: 1 
+2017-07-15 11:11:07.414 INFO  Socket is open 
+2017-07-15 11:11:15.430 INFO  Successful cmd: {"cmd":"scpt","val":[1]} 
+2017-07-15 11:11:27.149 INFO  Successful cmd: {"cmd":"scpt","val":[0]} 
+2017-07-15 11:12:36.204 INFO  Successful cmd: {"cmd":"scpt","val":[1]} 
+2017-07-15 11:12:38.745 INFO  Successful cmd: {"cmd":"scpt","val":[0]} 
+2017-07-15 11:12:40.745 INFO  Successful cmd: {"cmd":"scpt","val":[1]} 
+2017-07-15 11:12:41.928 INFO  Successful cmd: {"cmd":"scpt","val":[0]} 
+2017-07-15 11:12:43.203 INFO  Successful cmd: {"cmd":"scpt","val":[1]} 
+2017-07-15 11:12:44.441 INFO  Successful cmd: {"cmd":"scpt","val":[0]} 
+2017-07-15 11:13:53.922 INFO  Client count: 1 
+2017-07-15 11:13:53.924 INFO  Socket is open 
+2017-07-15 11:13:57.839 INFO  Successful cmd: {"cmd":"scpt","val":[1]} 
+2017-07-15 11:14:05.639 INFO  Successful cmd: {"cmd":"connect","val":[1]} 
+2017-07-15 11:14:09.298 INFO  Successful cmd: {"cmd":"scpt","val":[0]} 
+2017-07-15 11:15:17.717 INFO  Client count: 1 
+2017-07-15 11:15:17.719 INFO  Socket is open 
+2017-07-15 11:15:25.858 INFO  Successful cmd: {"cmd":"scpt","val":[1]} 
+2017-07-15 11:15:29.011 INFO  Successful cmd: {"cmd":"connect","val":[1]} 
+2017-07-15 11:15:41.183 INFO  Successful cmd: {"cmd":"scpt","val":[0]} 
+2017-07-15 11:16:33.172 INFO  Successful cmd: {"cmd":"scpt","val":[1]} 
+2017-07-15 11:26:21.847 INFO  Client count: 1 
+2017-07-15 11:26:21.848 INFO  Socket is open 
+2017-07-15 11:26:35.516 INFO  Successful cmd: {"cmd":"connect","val":[1]} 
+2017-07-15 11:26:47.985 INFO  Successful cmd: {"cmd":"scpt","val":[1]} 
+2017-07-15 11:28:46.633 INFO  Client count: 1 
+2017-07-15 11:28:46.635 INFO  Socket is open 
+2017-07-15 11:28:52.572 INFO  Successful cmd: {"cmd":"connect","val":[1]} 
+2017-07-15 11:28:53.776 INFO  Successful cmd: {"cmd":"scpt","val":[1]} 
+2017-07-15 11:36:32.893 INFO  Client count: 1 
+2017-07-15 11:36:32.894 INFO  Socket is open 
+2017-07-15 11:36:40.667 INFO  Successful cmd: {"cmd":"connect","val":[1]} 
+2017-07-15 11:36:46.974 INFO  Successful cmd: {"cmd":"scpt","val":[1]} 
+2017-07-15 11:48:04.202 INFO  Client count: 1 
+2017-07-15 11:48:04.203 INFO  Socket is open 
+2017-07-15 11:48:09.975 INFO  Successful cmd: {"cmd":"connect","val":[1]} 
+2017-07-15 11:48:11.716 INFO  Successful cmd: {"cmd":"scpt","val":[1]} 
+2017-07-15 11:49:43.678 INFO  Client count: 1 
+2017-07-15 11:49:43.680 INFO  Socket is open 
+2017-07-15 11:49:47.881 INFO  Successful cmd: {"cmd":"connect","val":[1]} 
+2017-07-15 11:49:49.634 INFO  Successful cmd: {"cmd":"scpt","val":[1]} 
+2017-07-15 11:51:35.019 INFO  Client count: 1 
+2017-07-15 11:51:35.021 INFO  Socket is open 
+2017-07-15 11:51:38.353 INFO  Successful cmd: {"cmd":"connect","val":[1]} 
+2017-07-15 11:51:40.955 INFO  Successful cmd: {"cmd":"scpt","val":[1]} 
+2017-07-15 11:52:20.141 INFO  Client count: 1 
+2017-07-15 11:52:20.142 INFO  Socket is open 
+2017-07-15 11:52:24.576 INFO  Successful cmd: {"cmd":"connect","val":[1]} 
+2017-07-15 11:52:26.085 INFO  Successful cmd: {"cmd":"scpt","val":[1]} 
+2017-07-15 11:58:49.721 INFO  Client count: 1 
+2017-07-15 11:58:49.722 INFO  Socket is open 
+2017-07-15 11:59:01.541 INFO  Successful cmd: {"cmd":"connect","val":[1]} 
+2017-07-15 11:59:02.466 INFO  Successful cmd: {"cmd":"scpt","val":[1]} 
+2017-07-15 11:18:11.513 INFO  Client count: 1 
+2017-07-15 11:18:11.516 INFO  Socket is open 
+2017-07-15 11:18:49.015 INFO  Client count: 1 
+2017-07-15 11:18:49.017 INFO  Socket is open 
+2017-07-15 11:19:18.298 INFO  Successful cmd: {"cmd":"connect","val":[1]} 
+2017-07-15 11:19:21.368 INFO  Successful cmd: {"cmd":"scpt","val":[1]} 
+2017-07-15 11:19:21.434 INFO  Client count: 0 
+2017-07-15 11:19:21.602 INFO  data saved in /launch-records//home/pi/websocket/communication-system/server/launch-records/15_6_2017_11_19_21_435.json 
+2017-07-15 11:19:24.955 INFO  Client count: 1 
+2017-07-15 11:19:24.957 INFO  Socket is open 
