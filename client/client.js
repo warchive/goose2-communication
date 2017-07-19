@@ -21,9 +21,18 @@ const cmds = {
     // ball valve controls
     "bv on": [function () {socket.emit('control', JSON.stringify({cmd: "bv", val: [1]}));}, "turn ball valve on"],
     "bv off": [function () {socket.emit('control', JSON.stringify({cmd: "bv", val: [0]}));}, "turn ball valve off"],
+
     // dpr control
     "dpr on": [function () {socket.emit('control', JSON.stringify({cmd: "dpr", val: [1]}));}, "turn dpr on"],
     "dpr off": [function () {socket.emit('control', JSON.stringify({cmd: "dpr", val: [0]}));}, "turn dpr off"],
+
+    // emergency drive control
+    "edr on": [function () {socket.emit('control', JSON.stringify({cmd: "edr", val: [1]}));}, "turn emergency drive on"],
+    "edr off": [function () {socket.emit('control', JSON.stringify({cmd: "edr", val: [0]}));}, "turn emergency drive off"],
+
+    // emergency drive control
+    "ewr on": [function () {socket.emit('control', JSON.stringify({cmd: "ewr", val: [1]}));}, "turn emergency wheel release on"],
+    "ewr off": [function () {socket.emit('control', JSON.stringify({cmd: "ewr", val: [0]}));}, "turn emergency wheel release off"],
 
     // pod modes
     "auto on": [function () {socket.emit('control', JSON.stringify({cmd: "auto", val: [1]}));}, "enable autonomous mode"],
@@ -48,15 +57,17 @@ const cmds = {
 rl.on('line', function (input)  {
     try {
         if (input.substr(0, 5) === 'speed') {
-            cmds.speed(input.split('--')[1]);
+            cmds.speed[0](input.split('--')[1]);
         } else {
             cmds[input][0]();
+            console.log("executing: " + cmds[input][1]);
         }
     } catch (e) {
-        console.log("Command is not supported");
+        console.log(e);
+        console.log(input + " command is not supported");
         console.log("Available commands:");
         Object.keys(cmds).forEach(function(key) {
-            console.log(key, "--->", cmds[key][1]);
+            console.log("['" + key + "']    ", cmds[key][1]);
         });
     }
 });
