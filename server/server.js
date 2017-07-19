@@ -45,6 +45,8 @@ io.sockets.on('connection', function (socket) {
         log.info('Client count: ' + --connectCounter);
         if (connectCounter === 0) {
             writer(dataLog);
+        } else {
+            socket.emit('notification', "client count: " + connectCounter);
         }
     });
 
@@ -53,8 +55,10 @@ io.sockets.on('connection', function (socket) {
         port.write(data, function(err) {
             if (err) {
                 log.error('Failed to send data over serial port: ', err.message, ' data: ', data);
+                socket.emit('notification', "cmd FAILED: " + data.toString());
             } else {
                 log.info('Successful cmd: ', data);
+                socket.emit('notification', "cmd SUCCESSFUL: " + data.toString());
                 console.log(data);
             }
         });
@@ -64,14 +68,16 @@ io.sockets.on('connection', function (socket) {
         port.write(data, function(err) {
             if (err) {
                 log.error('Failed to send data over serial port: ', err.message, ' data: ', data);
+                socket.emit('notification', "cmd FAILED: " + data.toString());
             } else {
                 log.info('Successful cmd: ', data);
+                socket.emit('notification', "cmd SUCCESSFUL: " + data.toString());
                 console.log(data);
             }
         });
 
         if (timer !== null) {
-            timer.clearInterval();
+            clearInterval(timer);
         }
 
         timer = setInterval(function () {
@@ -79,33 +85,33 @@ io.sockets.on('connection', function (socket) {
         }, 400);
     });
 
-    socket.on('ping', function(data) {
-        socket.emit('ping', data);
-    });
-
     socket.on('trigger_save', function() {
         writer(dataLog);
         log.info("save triggered from client");
-        socket.emit("saved file");
+        socket.emit('notification', "saved raw out file");
     });
 
     socket.on('save', function(data) {
         if (data === 1) {
             RAW_OUT = true;
             console.log("started writing data to a file");
+            socket.emit('notification', "started writing data to a file");
         } else {
             RAW_OUT = false;
             console.log("stopped writing data to a file");
+            socket.emit('notification' ,"stopped writing data to a file");
         }
     });
 
     port.on('data', function(data) {
         console.log(data);
-        socket.emit('pi', data);
+        socket.emit('sensor', data);
+
         if (RAW_OUT) {
             dataLog.push(data);
             if (dataLog.length === BUFFER) {
                 console.log("saved 500 lines into a file");
+                socket.emit('notification', "saved 500 lines to raw out");
                 writer(dataLog);
                 dataLog = [];
             }
