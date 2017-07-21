@@ -129,23 +129,23 @@ io.sockets.on('connection', function (socket) {
 
             time = data.time;
 
-            socket.emit('sensor', {
+            socket.emit('sensor', JSON.stringify({
                 'time': data.time,
                 'sensor': 'lvel',
                 'data': [velX, velY, velZ]
-            });
+            }));
 
-            socket.emit('sensor', {
+            socket.emit('sensor', JSON.stringify({
                 'time': data.time,
                 'sensor': 'ldisp',
                 'data': [dispX, dispY, dispZ]
             });
 
-            socket.emit('sensor', {
+            socket.emit('sensor', JSON.stringify({
                 'time': data.time,
                 'sensor': 'rpy',
                 'data': [roll, pitch, yaw]
-            })
+            }));
         }
 
 
