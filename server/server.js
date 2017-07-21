@@ -8,12 +8,25 @@ const SimpleNodeLogger = require('simple-node-logger');
 const serialport = require('serialport');
 const util = require('util');
 const fs = require('fs');
+const spawn = require('child_process').spawn;
 const BUFFER = 500;
 
 var dataLog = [];
 var connectCounter = 0;
 var RAW_OUT = false;
 var timer = null;
+
+// Python setup
+var py = spawn('python3', ['filename.py'])
+var py_data = [];
+
+py.stdout.on('data', function (data) {
+    // send data to front tend
+})
+
+py.stdout.on('end', function () {
+    // if the python stream closes do something!
+})
 
 // Logger
 const log = SimpleNodeLogger.createSimpleLogger({
@@ -106,6 +119,11 @@ io.sockets.on('connection', function (socket) {
     port.on('data', function(data) {
         console.log(data);
         socket.emit('sensor', data);
+        py_data.push(data);
+        if (py_data.length > 60) {
+            py.stdin.write(JSON.stringify(py_data));
+            py_data = [];
+        }
 
         if (RAW_OUT) {
             dataLog.push(data);
