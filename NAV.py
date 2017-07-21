@@ -123,7 +123,7 @@ def calcLinearDisplacement(ACCELArray, prevDisp):
         prevDisp[1] = yDisp[count-1]
         prevDisp[2] = zDisp[count-1]
         print(returnJSONArray)
-        return returnJSONArray
+        return prevDisp
 
 def outputRowPitchYaw(ACCELArray, MAGArray):
     DataType = ACCELArray[0]["sensor"]
@@ -216,6 +216,6 @@ while True:
 
     if (jsonarray[0]["sensor"] == 'accel'):
         calcLinearVelocity(jsonarray)
-        calcLinearDisplacement(jsonarray, initDisp)
+        initDisp = calcLinearDisplacement(jsonarray, initDisp)
 
     data = input()
