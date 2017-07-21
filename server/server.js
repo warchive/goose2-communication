@@ -46,72 +46,77 @@ io.sockets.on('connection', function (socket) {
         if (connectCounter === 0) {
             writer(dataLog);
         } else {
-            socket.emit('notification', "client count: " + connectCounter);
+            socket.emit('message', JSON.stringify({time: 0, message: "client count: " + connectCounter}));
         }
     });
 
     socket.on('control', function(data) {
-        console.log(data);
-        port.write(data, function(err) {
-            if (err) {
-                log.error('Failed to send data over serial port: ', err.message, ' data: ', data);
-                socket.emit('notification', "cmd FAILED: " + data.toString());
-            } else {
-                log.info('Successful cmd: ', data);
-                socket.emit('notification', "cmd SUCCESSFUL: " + data.toString());
-                console.log(data);
-            }
-        });
-    });
+        var parsed = JSON.parse(data);
+        console.log(parsed);
 
-    socket.on('connect_ar', function(data) {
         port.write(data, function(err) {
             if (err) {
                 log.error('Failed to send data over serial port: ', err.message, ' data: ', data);
-                socket.emit('notification', "cmd FAILED: " + data.toString());
+                socket.emit('message', JSON.stringify({time: 0, message: "cmd FAILED: " + data.toString()}));
             } else {
                 log.info('Successful cmd: ', data);
-                socket.emit('notification', "cmd SUCCESSFUL: " + data.toString());
+                socket.emit('message', JSON.stringify({time: 0, message: "cmd SUCCESSFUL: " + data.toString()}));
                 console.log(data);
             }
         });
 
-        if (timer !== null) {
-            clearInterval(timer);
+        if (parsed.cmd === 'connect') {
+            if (timer !== null) {
+                clearInterval(timer);
+            }
+
+            timer = setInterval(function () {
+                port.write(JSON.stringify({cmd: "check", val:[1]}));
+            }, 400);
         }
-
-        timer = setInterval(function () {
-            port.write(JSON.stringify({cmd: "check", val:[1]}));
-        }, 400);
     });
+
 
     socket.on('trigger_save', function() {
         writer(dataLog);
         log.info("save triggered from client");
-        socket.emit('notification', "saved raw out file");
+        socket.emit('message', JSON.stringify({time: 0, message: "saved raw out file"}));
     });
 
     socket.on('save', function(data) {
         if (data === 1) {
             RAW_OUT = true;
             console.log("started writing data to a file");
-            socket.emit('notification', "started writing data to a file");
+            socket.emit('message', JSON.stringify({time: 0, message: "started writing data to a file"}));
         } else {
             RAW_OUT = false;
             console.log("stopped writing data to a file");
-            socket.emit('notification' ,"stopped writing data to a file");
+            socket.emit('message', JSON.stringify({time: 0, message: "stopped writing data to a file"}));
         }
     });
 
     port.on('data', function(data) {
-        console.log(data);
-        socket.emit('sensor', data);
+        console.log("with <3 from arduino: " + data);
+
+        var obj = JSON.parse(data);
+        try {
+            if(obj.hasOwnProperty('received')){
+                obj.received = JSON.parse(obj.received);
+                socket.emit('command_received', JSON.stringify(obj));
+            } else if (obj.hasOwnProperty('sensor')) {
+                socket.emit('sensor', data);
+            } else {
+                socket.emit('message', data);
+            }
+        } catch (e){
+            console.log(e);
+        }
 
         if (RAW_OUT) {
             dataLog.push(data);
             if (dataLog.length === BUFFER) {
                 console.log("saved 500 lines into a file");
-                socket.emit('notification', "saved 500 lines to raw out");
+                socket.emit('message', JSON.stringify({time: 0, message: "saved 500 lines to raw out"}));
                 writer(dataLog);
                 dataLog = [];
             }

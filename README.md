@@ -18,6 +18,34 @@ Notes:
  - Navigate to `/client`
  - Run `npm install` (make sure you have a working internet connection)
  - Run `node client.js` to run the server
+ 
+# CMD CLI commands
+| cmd   |      description      |
+|----------|:-------------:|
+| 'ping' |  run connection test |
+| 'connect' | command to initiate arduino creates connection between RPI and Arduino |
+| 'data stop' | start writing raw data to a file on pi |
+|'data start' | stop writing raw data to a file on pi |
+|'data save' | manually save raw out file |
+| 'bv on' |     turn ball valve on |
+| 'bv off' |    turn ball valve off |
+| 'dpr on' |    turn dpr on |
+|'dpr off'  |  turn dpr off|
+|'edr on'   |  turn emergency drive on|
+|'edr off'  |   turn emergency drive off|
+|'ewr on'   | turn emergency wheel release on|
+|'ewr off'  |   turn emergency wheel release off|
+|'auto on'  |   enable autonomous mode|
+|'man on'   |  enable manual mode|
+|'start script'|    run off script|
+|'ar rests'    | restart arduino and save states|
+|'ar restus'   |  restart arduino and reset states|
+|'brake on'    | turn brake on|
+|'brake off'   |  turn brake off|
+|'emg on'   |  turn on emergency mode|
+|'emg off'  |   turn off emergency mode|
+|'speed --50'  | set speed (ex: to set speed to 50%, enter 'speed --50')|
+
 
 # Communication format
 

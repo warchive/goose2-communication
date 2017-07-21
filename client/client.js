@@ -13,7 +13,7 @@ const rl = readLine.createInterface({
 
 const cmds = {
     "ping": [function () {PRINT_RATE = true;}, "run connection test"],
-    "ar start": [function () {socket.emit('connect_ar', JSON.stringify({cmd: "connect", val: [1]}));}, "command to initiate arduino"], // to start saving
+    "connect": [function () {socket.emit('control', JSON.stringify({cmd: "connect", val: [1]}));}, "command to initiate arduino"], // to start saving
     "data stop": [function () {socket.emit('save', 0);}, "start writing raw data to a file on pi"], // to start saving
     "data start": [function () {socket.emit('save', 1);}, "stop writing raw data to a file on pi"], // to stop writing to file
     "data save": [function () {socket.emit('trigger_save');}, "manually save raw out file"], // to manually trigger save into file
@@ -49,7 +49,6 @@ const cmds = {
     "emg on": [function () {socket.emit('control', JSON.stringify({cmd: "dpr", val: [1]}));}, "turn on emergency mode"],
     "emg off": [function () {socket.emit('control', JSON.stringify({cmd: "dpr", val: [0]}));}, "turn off emergency mode"],
     "speed": [function (num) {
-        console.log("setting speed to: " + num);
         socket.emit('control', JSON.stringify({cmd: "spd", val: [num]}));
     }, "set speed (ex: to set speed to 50%, enter 'speed --50')"]
 };
@@ -57,13 +56,12 @@ const cmds = {
 rl.on('line', function (input)  {
     try {
         if (input.substr(0, 5) === 'speed') {
-            cmds.speed[0](input.split('--')[1]);
+            cmds.speed[0](parseInt(input.split('--')[1]));
         } else {
             cmds[input][0]();
             console.log("executing: " + cmds[input][1]);
         }
     } catch (e) {
-        console.log(e);
         console.log(input + " command is not supported");
         console.log("Available commands:");
         Object.keys(cmds).forEach(function(key) {
@@ -80,8 +78,8 @@ socket.on('disconnect', function() {
     console.log("disconnected");
 });
 
-socket.on('notification', function(data){
-    console.log(data);
+socket.on('message', function(data){
+    console.log(JSON.parse(data).message);
 });
 
 socket.on('sensor', function(data) {
