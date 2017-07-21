@@ -113,13 +113,19 @@ io.sockets.on('connection', function (socket) {
         if (data.sensor == 'accel') {
             let deltaT = (data.time - time) / 1000;
             let g = 9.80665;
-            let accelX, accelY, accelZ = data.data[0:2];
+            let accelX = data.data[0];
+            let accelY = data.data[1];
+            let accelZ = data.data[2];
             velX += accelX * g * deltaT;
             velY += accelY * g * deltaT;
             velZ += accelZ * g * deltaT;
             dispX += velX * deltaT;
             dispY += velY * deltaT;
             dispZ += velZ * deltaT;
+
+            let roll = data.data[3];
+            let pitch = data.data[4];
+            let yaw = 0;
 
             time = data.time;
 
@@ -134,6 +140,12 @@ io.sockets.on('connection', function (socket) {
                 'sensor': 'ldisp',
                 'data': [dispX, dispY, dispZ]
             });
+
+            socket.emit('sensor', {
+                'time': data.time,
+                'sensor': 'rpy',
+                'data': [roll, pitch, yaw]
+            })
         }
 
 
