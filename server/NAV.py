@@ -21,7 +21,7 @@ def SVR_process_monotype(JSONArray):
         y.append(JSONArray[count]["data"][1])
         z.append(JSONArray[count]["data"][2])
         heartbeat.append(JSONArray[count]["data"][3])
-        t.append([JSONArray[count]["time"]])
+        t.append((float)[JSONArray[count]["time"]/1000])
 
     svr_rbf = SVR(kernel='rbf', C=0.2e2, gamma=0.2, verbose=False)
     x = np.array(x)
@@ -61,7 +61,7 @@ def calcLinearVelocity(ACCELArray):
             x.append(data[count]["data"][0]*9.80665)
             y.append(data[count]["data"][1]*9.80665)
             z.append(data[count]["data"][2]*9.80665)
-            t.append((float)(data[count]["time"]/1000))
+            t.append((data[count]["time"]))
             heartbeat.append(data[count]["data"][3])
 
         xVel.append(0)
