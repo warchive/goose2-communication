@@ -15,18 +15,9 @@ var dataLog = [];
 var connectCounter = 0;
 var RAW_OUT = false;
 var timer = null;
-
-// Python setup
-var py = spawn('python3', ['filename.py'])
-var py_data = [];
-
-py.stdout.on('data', function (data) {
-    // send data to front tend
-})
-
-py.stdout.on('end', function () {
-    // if the python stream closes do something!
-})
+var dispX, dispY, dispZ = [0, 0, 0];
+var velX, velY, velZ = [0, 0, 0];
+var time = 0;
 
 // Logger
 const log = SimpleNodeLogger.createSimpleLogger({
@@ -119,11 +110,33 @@ io.sockets.on('connection', function (socket) {
     port.on('data', function(data) {
         console.log(data);
         socket.emit('sensor', data);
-        py_data.push(data);
-        if (py_data.length > 60) {
-            py.stdin.write(JSON.stringify(py_data));
-            py_data = [];
+        if (data.sensor == 'accel') {
+            let deltaT = (data.time - time) / 1000;
+            let g = 9.80665;
+            let accelX, accelY, accelZ = data.data[0:2];
+            velX += accelX * g * deltaT;
+            velY += accelY * g * deltaT;
+            velZ += accelZ * g * deltaT;
+            dispX += velX * deltaT;
+            dispY += velY * deltaT;
+            dispZ += velZ * deltaT;
+
+            time = data.time;
+
+            socket.emit('sensor', {
+                'time': data.time,
+                'sensor': 'lvel',
+                'data': [velX, velY, velZ]
+            });
+
+            socket.emit('sensor', {
+                'time': data.time,
+                'sensor': 'ldisp',
+                'data': [dispX, dispY, dispZ]
+            });
         }
+
+
 
         if (RAW_OUT) {
             dataLog.push(data);
