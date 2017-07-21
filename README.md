@@ -19,9 +19,9 @@ Notes:
  - Run `npm install` (make sure you have a working internet connection)
  - Run `node client.js` to run the server
  
-# CMD CLI commands
-| cmd   |      description      |
-|----------|:-------------:|
+# CLI commands
+| cmd | description |
+|:----------:|:-------------|
 | 'ping' |  run connection test |
 | 'connect' | command to initiate arduino creates connection between RPI and Arduino |
 | 'data stop' | start writing raw data to a file on pi |
