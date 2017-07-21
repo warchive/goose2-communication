@@ -139,7 +139,7 @@ io.sockets.on('connection', function (socket) {
                 'time': data.time,
                 'sensor': 'ldisp',
                 'data': [dispX, dispY, dispZ]
-            });
+            }));
 
             socket.emit('sensor', JSON.stringify({
                 'time': data.time,
