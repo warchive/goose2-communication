@@ -15,6 +15,23 @@ var connectCounter = 0;
 var RAW_OUT = false;
 var timer = null;
 
+// Python setup
+var py = spawn('python3', ['NAV.py']);
+var py_accel = [];
+var py_gyro = [];
+var py_mag = [];
+
+py.stdout.on('data', function (data) {
+    for (var k = 0; k > data.length; k++) {
+        console.log(data[k]);
+    }
+});
+
+py.stdout.on('end', function () {
+    console.log("end");
+});
+
+
 // Logger
 const log = SimpleNodeLogger.createSimpleLogger({
     logFilePath:'blackbox.log',
@@ -100,11 +117,33 @@ io.sockets.on('connection', function (socket) {
 
         var obj = JSON.parse(data);
         try {
-            if(obj.hasOwnProperty('received')){
+            if (obj.hasOwnProperty('received')){
                 obj.received = JSON.parse(obj.received);
                 socket.emit('command_received', JSON.stringify(obj));
             } else if (obj.hasOwnProperty('sensor')) {
-                socket.emit('sensor', data);
+
+                if (obj.sensor === 'gyro') {
+                    py_gyro.push(data);
+                    if (py_gyro.length > 60) {
+                        py.stdin.write(JSON.stringify(py_gyro));
+                        py_gyro = [];
+                    }
+                } if (obj.sensor === 'accel') {
+                    py_accel.push(data);
+                    if (py_accel.length > 60) {
+                        py.stdin.write(JSON.stringify(py_accel));
+                        py_accel = [];
+                    }
+                }
+                /*if (obj.sensor === 'mag') {
+                    py_mag.push(data);
+                    if (py_mag.length > 60) {
+                        py.stdin.write(JSON.stringify(py_mag));
+                        py_mag = [];
+                    }
+                } */else {
+                    socket.emit('sensor', data);
+                }
             } else {
                 socket.emit('message', data);
             }

@@ -27,12 +27,12 @@ const cmds = {
     "dpr off": [function () {socket.emit('control', JSON.stringify({cmd: "dpr", val: [0]}));}, "turn dpr off"],
 
     // emergency drive control
-    "edr on": [function () {socket.emit('control', JSON.stringify({cmd: "edr", val: [1]}));}, "turn emergency drive on"],
-    "edr off": [function () {socket.emit('control', JSON.stringify({cmd: "edr", val: [0]}));}, "turn emergency drive off"],
+    "drive on": [function () {socket.emit('control', JSON.stringify({cmd: "spddrive", val: [1]}));}, "turn emergency drive on"],
+    "drive off": [function () {socket.emit('control', JSON.stringify({cmd: "spddrive", val: [0]}));}, "turn emergency drive off"],
 
     // emergency drive control
-    "ewr on": [function () {socket.emit('control', JSON.stringify({cmd: "ewr", val: [1]}));}, "turn emergency wheel release on"],
-    "ewr off": [function () {socket.emit('control', JSON.stringify({cmd: "ewr", val: [0]}));}, "turn emergency wheel release off"],
+    "drop on": [function () {socket.emit('control', JSON.stringify({cmd: "ewr", val: [1]}));}, "turn emergency wheel release on"],
+    "drop off": [function () {socket.emit('control', JSON.stringify({cmd: "ewr", val: [0]}));}, "turn emergency wheel release off"],
 
     // pod modes
     "auto on": [function () {socket.emit('control', JSON.stringify({cmd: "auto", val: [1]}));}, "enable autonomous mode"],
@@ -44,12 +44,12 @@ const cmds = {
     "ar restus": [function () {socket.emit('control', JSON.stringify({cmd: "restus", val: [1]}));}, "restart arduino and reset states"],
 
     // pod controls
-    "brake on": [function () {socket.emit('control', JSON.stringify({cmd: "dpr", val: [1]}));}, "turn brake on"],
-    "brake off": [function () {socket.emit('control', JSON.stringify({cmd: "dpr", val: [0]}));}, "turn brake off"],
+    "brake on": [function () {socket.emit('control', JSON.stringify({cmd: "brk", val: [1]}));}, "turn brake on"],
+    "brake off": [function () {socket.emit('control', JSON.stringify({cmd: "brk", val: [0]}));}, "turn brake off"],
     "emg on": [function () {socket.emit('control', JSON.stringify({cmd: "dpr", val: [1]}));}, "turn on emergency mode"],
     "emg off": [function () {socket.emit('control', JSON.stringify({cmd: "dpr", val: [0]}));}, "turn off emergency mode"],
     "speed": [function (num) {
-        socket.emit('control', JSON.stringify({cmd: "spd", val: [num]}));
+        socket.emit('control', JSON.stringify({cmd: "spdmag", val: [num]}));
     }, "set speed (ex: to set speed to 50%, enter 'speed --50')"]
 };
 
