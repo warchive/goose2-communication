@@ -37,23 +37,23 @@
 <tr>
 <td>Manual</td>
 <td>Toggle manual mode on or off</td>
-<td>man</td>
-<td>1</td>
-<td><pre>{"cmd":"man","val":[0]}</pre></td>
-</tr>
-<tr>
-<td>Script</td>
-<td>Toggle script mode on or off</td>
-<td>scpt</td>
-<td>1</td>
-<td><pre>{"cmd":"scpt","val":[0]}</pre></td>
+<td>mode</td>
+<td>0, 1 or 2</td>
+<td><pre>{"cmd":"mode","val":[0]}</pre></td>
 </tr>
 <tr>
 <td>Autonomous</td>
 <td>Toggle autonomous mode on or off</td>
-<td>auto</td>
-<td>1</td>
-<td><pre>{"cmd":"auto","val":[0]}</pre></td>
+<td>mode</td>
+<td>0, 1 or 2</td>
+<td><pre>{"cmd":"mode","val":[1]}</pre></td>
+</tr>
+<tr>
+<td>Script</td>
+<td>Toggle script mode on or off</td>
+<td>mode</td>
+<td>0, 1 or 2</td>
+<td><pre>{"cmd":"mode","val":[2]}</pre></td>
 </tr>
 <tr>
 <td>Ball Valve</td>
@@ -76,33 +76,32 @@
 <td>1</td>
 <td><pre>{"cmd":"check","val":[1]}</pre></td>
 </tr>
-<tr>
-<td>Connect</td>
-<td>Toggle PI connection with Arduino on or off</td>
-<td>connect</td>
-<td>0 or 1</td>
-<td><pre>{"cmd":"connect","val":[1]}</pre></td>
-</tr>
-<tr>
 <td>Restart Saved</td>
 <td>Restart the Arduino and save the current state</td>
-<td>rests</td>
-<td>1</td>
-<td><pre>{"cmd":"rests","val":[1]}</pre></td>
+<td>rest</td>
+<td>1 or 2</td>
+<td><pre>{"cmd":"rest","val":[1]}</pre></td>
 </tr>
 <tr>
 <td>Restart Unsaved</td>
 <td>Restart the Arduino and discard the current state</td>
-<td>restus</td>
-<td>1</td>
-<td><pre>{"cmd":"restus","val":[1]}</pre></td>
+<td>rest</td>
+<td>1 or 2</td>
+<td><pre>{"cmd":"rest","val":[2]}</pre></td>
 </tr>
 <tr>
 <td>Stop Pod</td>
-<td>Stop the pod using the optimal way (nice stop)</td>
+<td>Stop the pod in a best safe way</td>
 <td>stop</td>
-<td>1</td>
+<td>2</td>
 <td><pre>{"cmd":"stop","val":[1]}</pre></td>
+</tr>
+<tr>
+<td>Start Pod</td>
+<td>Start the pod (have to use this initially to start)</td>
+<td>stop</td>
+<td>2</td>
+<td><pre>{"cmd":"stop","val":[0]}</pre></td>
 </tr>
 </tbody>
 </table>
