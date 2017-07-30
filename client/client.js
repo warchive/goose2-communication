@@ -13,7 +13,7 @@ const rl = readLine.createInterface({
 
 const cmds = {
     "ping": [function () {PRINT_RATE = true;}, "run connection test"],
-    "ar start": [function () {socket.emit('connect_ar', JSON.stringify({cmd: "connect", val: [1]}));}, "command to initiate arduino"], // to start saving
+    "connect": [function () {socket.emit('control', JSON.stringify({cmd: "connect", val: [1]}));}, "command to initiate arduino"], // to start saving
     "data stop": [function () {socket.emit('save', 0);}, "start writing raw data to a file on pi"], // to start saving
     "data start": [function () {socket.emit('save', 1);}, "stop writing raw data to a file on pi"], // to stop writing to file
     "data save": [function () {socket.emit('trigger_save');}, "manually save raw out file"], // to manually trigger save into file
@@ -21,9 +21,18 @@ const cmds = {
     // ball valve controls
     "bv on": [function () {socket.emit('control', JSON.stringify({cmd: "bv", val: [1]}));}, "turn ball valve on"],
     "bv off": [function () {socket.emit('control', JSON.stringify({cmd: "bv", val: [0]}));}, "turn ball valve off"],
+
     // dpr control
     "dpr on": [function () {socket.emit('control', JSON.stringify({cmd: "dpr", val: [1]}));}, "turn dpr on"],
     "dpr off": [function () {socket.emit('control', JSON.stringify({cmd: "dpr", val: [0]}));}, "turn dpr off"],
+
+    // emergency drive control
+    "drive on": [function () {socket.emit('control', JSON.stringify({cmd: "spddrive", val: [1]}));}, "turn emergency drive on"],
+    "drive off": [function () {socket.emit('control', JSON.stringify({cmd: "spddrive", val: [0]}));}, "turn emergency drive off"],
+
+    // emergency drive control
+    "drop on": [function () {socket.emit('control', JSON.stringify({cmd: "ewr", val: [1]}));}, "turn emergency wheel release on"],
+    "drop off": [function () {socket.emit('control', JSON.stringify({cmd: "ewr", val: [0]}));}, "turn emergency wheel release off"],
 
     // pod modes
     "auto on": [function () {socket.emit('control', JSON.stringify({cmd: "auto", val: [1]}));}, "enable autonomous mode"],
@@ -35,28 +44,28 @@ const cmds = {
     "ar restus": [function () {socket.emit('control', JSON.stringify({cmd: "restus", val: [1]}));}, "restart arduino and reset states"],
 
     // pod controls
-    "brake on": [function () {socket.emit('control', JSON.stringify({cmd: "dpr", val: [1]}));}, "turn brake on"],
-    "brake off": [function () {socket.emit('control', JSON.stringify({cmd: "dpr", val: [0]}));}, "turn brake off"],
+    "brake on": [function () {socket.emit('control', JSON.stringify({cmd: "brk", val: [1]}));}, "turn brake on"],
+    "brake off": [function () {socket.emit('control', JSON.stringify({cmd: "brk", val: [0]}));}, "turn brake off"],
     "emg on": [function () {socket.emit('control', JSON.stringify({cmd: "dpr", val: [1]}));}, "turn on emergency mode"],
     "emg off": [function () {socket.emit('control', JSON.stringify({cmd: "dpr", val: [0]}));}, "turn off emergency mode"],
     "speed": [function (num) {
-        console.log("setting speed to: " + num);
-        socket.emit('control', JSON.stringify({cmd: "spd", val: [num]}));
+        socket.emit('control', JSON.stringify({cmd: "spdmag", val: [num]}));
     }, "set speed (ex: to set speed to 50%, enter 'speed --50')"]
 };
 
 rl.on('line', function (input)  {
     try {
         if (input.substr(0, 5) === 'speed') {
-            cmds.speed(input.split('--')[1]);
+            cmds.speed[0](parseInt(input.split('--')[1]));
         } else {
             cmds[input][0]();
+            console.log("executing: " + cmds[input][1]);
         }
     } catch (e) {
-        console.log("Command is not supported");
+        console.log(input + " command is not supported");
         console.log("Available commands:");
         Object.keys(cmds).forEach(function(key) {
-            console.log(key, "--->", cmds[key][1]);
+            console.log("['" + key + "']    ", cmds[key][1]);
         });
     }
 });
@@ -69,8 +78,8 @@ socket.on('disconnect', function() {
     console.log("disconnected");
 });
 
-socket.on('notification', function(data){
-    console.log(data);
+socket.on('message', function(data){
+    console.log(JSON.parse(data).message);
 });
 
 socket.on('sensor', function(data) {
