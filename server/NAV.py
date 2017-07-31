@@ -1,7 +1,8 @@
 # Script for navigation system with functions for position calculations
 # Written by Rosie Zou, June 2017
 
-import numpy as np
+# import numpy as np
+import math as m
 from sklearn.svm import SVR
 import sys
 import json
@@ -24,9 +25,9 @@ def SVR_process_monotype(JSONArray):
         t.append([JSONArray[count]["time"]])
 
     svr_rbf = SVR(kernel='rbf', C=0.2e2, gamma=0.2, verbose=False)
-    x = np.array(x)
-    y = np.array(y)
-    z = np.array(z)
+    #x = np.array(x)
+    #y = np.array(y)
+    #z = np.array(z)
     x_rbf = svr_rbf.fit(t, x).predict(t)
     y_rbf = svr_rbf.fit(t, y).predict(t)
     z_rbf = svr_rbf.fit(t, z).predict(t)
@@ -166,9 +167,9 @@ def calcAngularVelocity(GYROArray):
 
 # yaw = atan2( (-ymag*cos(Roll) + zmag*sin(Roll) ) , (xmag*cos(Pitch) + ymag*sin(Pitch)*sin(Roll)+ zmag*sin(Pitch)*cos(Roll)) )
 def calcYaw(roll, pitch, xmag, ymag, zmag):
-    arg1 = -1 * ymag * np.cos(roll) + zmag * np.sin(roll)
-    arg2 = xmag * np.cos(pitch) + ymag * np.sin(pitch) * np.sin*(roll) + zmag * np.sin(pitch) * np.cos(roll)
-    return np.arctan2(arg1, arg2)
+    arg1 = -1 * ymag * m.cos(roll) + zmag * m.sin(roll)
+    arg2 = xmag * m.cos(pitch) + ymag * m.sin(pitch) * m.sin*(roll) + zmag * m.sin(pitch) * m.cos(roll)
+    return m.atan2(arg1, arg2)
 
 
 def Optical(OptJSON):
