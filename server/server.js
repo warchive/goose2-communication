@@ -1,5 +1,9 @@
 'use strict';
 
+// import settings
+const CONFIG = require('./config.js');
+
+// import dependencies
 const express = require('express');
 const app = express();
 const server = require('http').createServer(app);
@@ -8,13 +12,28 @@ const SimpleNodeLogger = require('simple-node-logger');
 const serialport = require('serialport');
 const util = require('util');
 const fs = require('fs');
-const BUFFER = 500;
 
-var dataLog = [];
-var connectCounter = 0;
-var RAW_OUT = false;
-var timer = null;
+let dataLog = [];
+let connectCounter = 0;
+let RAW_OUT = true; // save to a file by default
+let timer = null;
 
+// Logger
+const log = SimpleNodeLogger.createSimpleLogger({
+    logFilePath:'blackbox.log',
+    timestampFormat:'YYYY-MM-DD HH:mm:ss.SSS'
+});
+
+// Serial port setup
+let SerialPort = serialport.SerialPort;
+let parsers = serialport.parsers;
+let port = getNewPort();
+
+// Server Setup
+server.listen(CONFIG.PORT);
+console.log("listening on port:" + CONFIG.PORT);
+
+/*
 // Python setup
 var py = spawn('python3', ['NAV.py']);
 var py_accel = [];
@@ -30,29 +49,13 @@ py.stdout.on('data', function (data) {
 py.stdout.on('end', function () {
     console.log("end");
 });
+*/
 
 
-// Logger
-const log = SimpleNodeLogger.createSimpleLogger({
-    logFilePath:'blackbox.log',
-    timestampFormat:'YYYY-MM-DD HH:mm:ss.SSS'
-});
-
-// Serial port setup
-var SerialPort = serialport.SerialPort;
-var parsers = serialport.parsers;
-
-var port = getNewPort();
 
 port.on('open', function () {
     console.log("Open Serial Port");
 });
-
-// Server Setup
-const netPort = 8002;
-server.listen(netPort);
-console.log("listening on port:" + netPort);
-
 
 // Listeners
 io.sockets.on('connection', function (socket) {
@@ -68,7 +71,7 @@ io.sockets.on('connection', function (socket) {
     });
 
     socket.on('control', function(data) {
-        var parsed = JSON.parse(data);
+        let parsed = JSON.parse(data);
         console.log(parsed);
 
         port.write(data, function(err) {
@@ -89,7 +92,7 @@ io.sockets.on('connection', function (socket) {
 
             timer = setInterval(function () {
                 port.write(JSON.stringify({cmd: "check", val:[1]}));
-            }, 400);
+            }, CONFIG.CHECK_DELAY);
         }
     });
 
@@ -113,16 +116,16 @@ io.sockets.on('connection', function (socket) {
     });
 
     port.on('data', function(data) {
-        console.log("with <3 from arduino: " + data);
+        // console.log("with <3 from arduino: " + data);
 
-        var obj = JSON.parse(data);
+        let obj = JSON.parse(data);
         try {
             if (obj.hasOwnProperty('received')){
                 obj.received = JSON.parse(obj.received);
                 socket.emit('command_received', JSON.stringify(obj));
             } else if (obj.hasOwnProperty('sensor')) {
 
-                if (obj.sensor === 'gyro') {
+               /* if (obj.sensor === 'gyro') {
                     py_gyro.push(data);
                     if (py_gyro.length > 60) {
                         py.stdin.write(JSON.stringify(py_gyro));
@@ -134,16 +137,15 @@ io.sockets.on('connection', function (socket) {
                         py.stdin.write(JSON.stringify(py_accel));
                         py_accel = [];
                     }
-                }
-                /*if (obj.sensor === 'mag') {
+                } if (obj.sensor === 'mag') {
                     py_mag.push(data);
                     if (py_mag.length > 60) {
                         py.stdin.write(JSON.stringify(py_mag));
                         py_mag = [];
                     }
-                } */else {
+                } else { */
                     socket.emit('sensor', data);
-                }
+                //}
             } else {
                 socket.emit('message', data);
             }
@@ -153,9 +155,9 @@ io.sockets.on('connection', function (socket) {
 
         if (RAW_OUT) {
             dataLog.push(data);
-            if (dataLog.length === BUFFER) {
-                console.log("saved 500 lines into a file");
-                socket.emit('message', JSON.stringify({time: 0, message: "saved 500 lines to raw out"}));
+            if (dataLog.length === CONFIG.RAW_OUT_BUFF) {
+                console.log("saved "+CONFIG.RAW_OUT_BUFF+" lines into a file");
+                socket.emit('message', JSON.stringify({time: 0, message: "saved "+CONFIG.RAW_OUT_BUFF+" lines to raw out"}));
                 writer(dataLog);
                 dataLog = [];
             }
@@ -167,7 +169,7 @@ io.sockets.on('connection', function (socket) {
 });
 
 function writer (data) {
-    var now = new Date(),
+    let now = new Date(),
         d = now.getDate(),
         m = now.getMonth(),
         y = now.getFullYear(),
@@ -178,7 +180,7 @@ function writer (data) {
         filename = __dirname + util.format('/launch-records/%s_%s_%s_%s_%s_%s_%s.json', d, m , y, h, min, sec, mill);
 
 
-    fs.writeFile(filename, JSON.stringify(data), function (err) {
+    fs.writeFile(filename, JSON.stringify({data: data}), function (err) {
         if (err) throw err;
         log.info('data saved in /launch-records/' + filename);
         console.log('data saved in /launch-records/' + filename);
@@ -186,8 +188,8 @@ function writer (data) {
 }
 
 function getNewPort() {
-    return new SerialPort("/dev/ttyACM0", {
-        baudrate: 115200,
+    return new SerialPort(CONFIG.AR_FOLDER_DIR, {
+        baudrate: CONFIG.AR_BITRATE,
         parser: parsers.readline('\n')
     });
 }

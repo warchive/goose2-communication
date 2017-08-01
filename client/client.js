@@ -1,10 +1,11 @@
-const socket = require('socket.io-client')('http://192.168.1.142:8002'); // ip will probably change all the time
+const CONFIG = require('./config.js');
+const socket = require('socket.io-client')(CONFIG.network_IP); // ip will probably change all the time
 const readLine = require('readline');
 
-var counter = 0;
-var firstCounter = 0;
+let counter = 0;
+let firstCounter = 0;
+let PRINT_RATE = false;
 const COUNTER_CHECK = 60;
-var PRINT_RATE = false;
 
 const rl = readLine.createInterface({
     input: process.stdin,
@@ -13,7 +14,10 @@ const rl = readLine.createInterface({
 
 const cmds = {
     "ping": [function () {PRINT_RATE = true;}, "run connection test"],
-    "connect": [function () {socket.emit('control', JSON.stringify({cmd: "connect", val: [1]}));}, "command to initiate arduino"], // to start saving
+    "connect": [function () {socket.emit('control', JSON.stringify({cmd: "connect", val: [1]}));}, "command to initiate arduino"],
+    "start": [function () {socket.emit('control', JSON.stringify({cmd: "stop", val: [1]}));}, "command to start arduino sensors"],
+    "stop": [function () {socket.emit('control', JSON.stringify({cmd: "stop", val: [0]}));}, "command to stop arduino sensors"],
+
     "data stop": [function () {socket.emit('save', 0);}, "start writing raw data to a file on pi"], // to start saving
     "data start": [function () {socket.emit('save', 1);}, "stop writing raw data to a file on pi"], // to stop writing to file
     "data save": [function () {socket.emit('trigger_save');}, "manually save raw out file"], // to manually trigger save into file
@@ -46,54 +50,58 @@ const cmds = {
     // pod controls
     "brake on": [function () {socket.emit('control', JSON.stringify({cmd: "brk", val: [1]}));}, "turn brake on"],
     "brake off": [function () {socket.emit('control', JSON.stringify({cmd: "brk", val: [0]}));}, "turn brake off"],
-    "emg on": [function () {socket.emit('control', JSON.stringify({cmd: "dpr", val: [1]}));}, "turn on emergency mode"],
-    "emg off": [function () {socket.emit('control', JSON.stringify({cmd: "dpr", val: [0]}));}, "turn off emergency mode"],
+    "emg on": [function () {socket.emit('control', JSON.stringify({cmd: "emg", val: [1]}));}, "turn on emergency mode"],
+    "emg off": [function () {socket.emit('control', JSON.stringify({cmd: "emg", val: [0]}));}, "turn off emergency mode"],
     "speed": [function (num) {
         socket.emit('control', JSON.stringify({cmd: "spdmag", val: [num]}));
     }, "set speed (ex: to set speed to 50%, enter 'speed --50')"]
 };
 
-rl.on('line', function (input)  {
-    try {
-        if (input.substr(0, 5) === 'speed') {
-            cmds.speed[0](parseInt(input.split('--')[1]));
-        } else {
-            cmds[input][0]();
-            console.log("executing: " + cmds[input][1]);
+function main () {
+    console.log("waiting for connection");
+
+    rl.on('line', function (input) {
+        try {
+            if (input.substr(0, 5) === 'speed') {
+                cmds.speed[0](parseInt(input.split('--')[1]));
+            } else {
+                cmds[input][0]();
+                console.log("executing: " + cmds[input][1]);
+            }
+        } catch (e) {
+            console.log(input + " command is not supported");
+            console.log("Available commands:");
+            Object.keys(cmds).forEach(function (key) {
+                console.log("['" + key + "']    ", cmds[key][1]);
+            });
         }
-    } catch (e) {
-        console.log(input + " command is not supported");
-        console.log("Available commands:");
-        Object.keys(cmds).forEach(function(key) {
-            console.log("['" + key + "']    ", cmds[key][1]);
-        });
-    }
-});
+    });
 
-socket.on('connect', function() {
-    console.log("connected");
-});
+    socket.on('connect', function () {
+        console.log("connected");
+    });
 
-socket.on('disconnect', function() {
-    console.log("disconnected");
-});
+    socket.on('disconnect', function () {
+        console.log("disconnected");
+    });
 
-socket.on('message', function(data){
-    console.log(JSON.parse(data).message);
-});
+    socket.on('message', function (data) {
+        // console.log(JSON.parse(data).message);
+    });
 
-socket.on('sensor', function(data) {
-    var parsed = JSON.parse(data);
+    socket.on('sensor', function (data) {
+        let parsed = JSON.parse(data);
 
-    if (parsed.sensor === 'gyro') {
-        counter ++;
-        printHB(parsed);
-    }
+        if (parsed.sensor === 'gyro') {
+            counter++;
+            printHB(parsed);
+        }
 
-    if (parsed.sensor === 'start') {
-        console.log("arduino connected");
-    }
-});
+        if (parsed.sensor === 'start') {
+            console.log("arduino connected");
+        }
+    });
+}
 
 function printHB(parsed) {
     if (counter === COUNTER_CHECK) {
@@ -105,3 +113,6 @@ function printHB(parsed) {
         counter = 0;
     }
 }
+
+// invoking main script:
+main();
