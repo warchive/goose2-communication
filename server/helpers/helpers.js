@@ -1,7 +1,9 @@
 /**
  * Created by ruslan on 02/08/17.
  */
-import util from "util"
+'use strict';
+
+const util = require("util");
 
 module.exports = {
     writer: function (data, fs) {

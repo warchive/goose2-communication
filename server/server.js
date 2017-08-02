@@ -6,10 +6,11 @@ const CONFIG = require('./config.js');
 // import dependencies
 const express = require('express');
 const SimpleNodeLogger = require('simple-node-logger');
-const SerialPort = require('serialport');
+const serialport = require('serialport');
 const util = require('util');
 const fs = require('fs');
 const H = require('./helpers/helpers.js');
+const PythonShell = require('python-shell');
 
 let dataLog = [];
 let connectCounter = 0;
@@ -25,6 +26,8 @@ const io = require('socket.io').listen(server);
 const log = SimpleNodeLogger.createSimpleLogger(CONFIG.SIMPLE_LOGGER);
 
 // Serial port setup
+let SerialPort = serialport.SerialPort;
+let parsers = serialport.parsers;
 let port = getNewPort();
 
 port.on('open', function () {
