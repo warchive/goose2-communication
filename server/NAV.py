@@ -6,21 +6,22 @@ from sklearn.svm import SVR
 import sys
 import json
 
-def SVR_process_monotype(JSONArray):
+
+def svr_process_monotype(json_arr, d_type):
+    size = len(json_arr)
+    x = []
+    y = []
+    z = []
+    t = []
+    heartbeat = []
+
     try:
-        DataType = JSONArray[0]["sensor"]
-        size = len(JSONArray)
-        x = []
-        y = []
-        z = []
-        t = []
-        heartbeat = []
-        for count in range(size):
-            x.append(JSONArray[count]["data"][0])
-            y.append(JSONArray[count]["data"][1])
-            z.append(JSONArray[count]["data"][2])
-            heartbeat.append(JSONArray[count]["data"][3])
-            t.append([float(JSONArray[count]["time"]/1000)])
+        for k in json_arr:
+            x.append(k["data"][0])
+            y.append(k["data"][1])
+            z.append(k["data"][2])
+            heartbeat.append(k["data"][3])
+            t.append([float(k["time"] / 1000)])
 
         svr_rbf = SVR(kernel='rbf', C=0.2e2, gamma=0.2, verbose=False)
         x = np.array(x)
@@ -29,117 +30,141 @@ def SVR_process_monotype(JSONArray):
         x_rbf = svr_rbf.fit(t, x).predict(t)
         y_rbf = svr_rbf.fit(t, y).predict(t)
         z_rbf = svr_rbf.fit(t, z).predict(t)
-        returnJSONArray = []
+
+        return_json_arr = []
         count = 0
+
         while count < size:
-            returnDict = {'time': t[count][0], 'sensor': DataType, 'data': [x_rbf[count], y_rbf[count], z_rbf[count], heartbeat[count]]}
-            returnJSONObject = json.dump(returnDict)
-            returnJSONArray.append(returnJSONObject)
+            obj = {
+                'time': t[count][0],
+                'sensor': d_type,
+                'data': [
+                    x_rbf[count],
+                    y_rbf[count],
+                    z_rbf[count],
+                    heartbeat[count]
+                ]
+            }
+
             count += 1
+            return_json_arr.append(obj)
 
-        print(returnJSONArray)
-        sys.stdout.flush()
-        return returnJSONObject
-    except(Exception):
-        print(JSONArray)
+        # print(return_json_arr)
+        return return_json_arr
 
-def calcLateralForce(ACCELArray):
-    data = SVR_process_monotype(ACCELArray)
-    data = map(lambda x: x["data"][0] * 140, data)
-    data = map(lambda x: x["data"][1] * 140, data)
-    data = map(lambda x: x["data"][2] * 140, data)
-    for i in range(len(data)):
-        data[i]["sensor"] = "latf"
-    print(data)
-    return data
+    except Exception:
+        return False
 
 
-def calcLinearVelocity(ACCELArray):
-    data = SVR_process_monotype(ACCELArray)
-    DataType = data[0]["sensor"]
-    if DataType != "accel":
-        return "Accelerometer readings required"
-    else:
-        size = len(ACCELArray)
-        x = []
-        y = []
-        z = []
-        t = []
-        xVel = []
-        yVel = []
-        zVel = []
-        heartbeat = []
-        for count in range(size):
-            x.append(data[count]["data"][0]*9.80665)
-            y.append(data[count]["data"][1]*9.80665)
-            z.append(data[count]["data"][2]*9.80665)
-            t.append((data[count]["time"]))
-            heartbeat.append(data[count]["data"][3])
+def calc_lat_force(accel_arr):
+    accel_arr = map(lambda x:
+                    {'time': x['time'],
+                     'sensor': 'latf',
+                     'data': [
+                         float(x["data"][0] * 140),
+                         float(x["data"][1] * 140),
+                         float(x["data"][2] * 140),
+                         x["data"][3]]
+                     }, accel_arr)
 
-        xVel.append(0)
-        yVel.append(0)
-        zVel.append(0)
-        count = 1
-        while count < size:
-            xVel.append((float)((x[count] - x[count - 1]) * (t[count] - t[count - 1])))
-            yVel.append((float)((y[count] - y[count - 1]) * (t[count] - t[count - 1])))
-            zVel.append((float)((z[count] - z[count - 1]) * (t[count] - t[count - 1])))
-            count += 1
+    return accel_arr
 
-        returnJSONArray = []
-        count = 0
-        while count < size:
-            returnDict = {'time': t[count], 'sensor': 'lvel',
-                          'data': [xVel[count], yVel[count], zVel[count], heartbeat[count]]}
-            returnJSONObject = json.dumps(returnDict)
-            returnJSONArray.append(returnJSONObject)
-            count += 1
 
-        print(returnJSONArray)
-        sys.stdout.flush()
-        return returnJSONObject
+def calc_lin_velocity(accel_arr):
+    x, y, z, t, = [], [], [], []
+    x_vel, y_vel, z_vel, heartbeat = [], [], [], []
+    size = len(accel_arr)
 
-def calcLinearDisplacement(ACCELArray, prevDisp):
-    DataType = ACCELArray[0]["sensor"]
-    if DataType != "accel":
-        return "Accelerometer readings required"
-    else:
-        velocity = calcLinearVelocity(ACCELArray)
-        size = len(velocity)
-        xVel = map(lambda x: x["data"][0], velocity)
-        yVel = map(lambda x: x["data"][1], velocity)
-        zVel = map(lambda x: x["data"][2], velocity)
-        time = map(lambda x: x["time"], velocity)
-        heartbeat = map(lambda x: x["data"][3], velocity)
-        xDisp = []
-        yDisp = []
-        zDisp = []
+    for i in accel_arr:
+        x.append(i["data"][0] * 9.80665)
+        y.append(i["data"][1] * 9.80665)
+        z.append(i["data"][2] * 9.80665)
+        t.append((i["time"]))
+        heartbeat.append(i["data"][3])
 
-        xDisp.append(prevDisp[0])
-        yDisp.append(prevDisp[1])
-        zDisp.append(prevDisp[2])
-        count = 1
-        while count < size:
-            xDisp.append((float)((xVel[count]-xVel[count-1])*(time[count] - time[count-1])) + xDisp[count-1])
-            yDisp.append((float)((yVel[count]-yVel[count-1])*(time[count] - time[count-1])) + yDisp[count-1])
-            zDisp.append((float)((zVel[count]-zVel[count-1])*(time[count] - time[count-1])) + zDisp[count-1])
-            count += 1
+    x_vel.append(0)
+    y_vel.append(0)
+    z_vel.append(0)
+    count = 1
 
-        returnJSONArray = []
-        count = 0
-        while count < size:
-            returnDict = {'time': time[count], 'sensor': 'ldisp',
-                          'data': [xDisp[count], yDisp[count], zDisp[count], heartbeat[count]]}
-            returnJSONObject = json.dumps(returnDict)
-            returnJSONArray.append(returnJSONObject)
-            count += 1
-        prevDisp[0] = xDisp[count-1]
-        prevDisp[1] = yDisp[count-1]
-        prevDisp[2] = zDisp[count-1]
-        print(returnJSONArray)
-        return prevDisp
+    while count < size:
+        x_vel.append(float(
+            (x[count] - x[count - 1]) * (t[count] - t[count - 1])))
+        y_vel.append(float(
+            (y[count] - y[count - 1]) * (t[count] - t[count - 1])))
+        z_vel.append(float(
+            (z[count] - z[count - 1]) * (t[count] - t[count - 1])))
+        count += 1
 
-def outputRowPitchYaw(ACCELArray, MAGArray):
+    return_json_arr = []
+    count = 0
+
+    while count < size:
+        return_dict = {
+            'time': t[count],
+            'sensor': 'lvel',
+            'data': [
+                x_vel[count],
+                y_vel[count],
+                z_vel[count],
+                heartbeat[count]]
+        }
+
+        return_json_arr.append(json.dumps(return_dict))
+        count += 1
+
+    return return_json_arr
+
+
+def calc_lin_displacement(prev_disp, vel):
+    x_disp, y_disp, z_disp = [], [], []
+    size = len(vel)
+
+    x_disp.append(prev_disp[0])
+    y_disp.append(prev_disp[1])
+    z_disp.append(prev_disp[2])
+
+    count = 1
+    while count < size:
+        x_disp.append(float(
+            (vel[count]['data'][0] - vel[count - 1]['data'][0]) *
+            (vel[count]['time'] -
+             vel[count - 1]['time'])) + x_disp[count - 1])
+        y_disp.append(float(
+            (vel[count]['data'][1] - vel[count - 1]['data'][1]) *
+            (vel[count]['time'] -
+             vel[count - 1]['time'])) + y_disp[count - 1])
+        z_disp.append(float(
+            (vel[count]['data'][2] - vel[count - 1]['data'][2]) *
+            (vel[count]['time'] -
+             vel[count - 1]['time'])) + z_disp[count - 1])
+        count += 1
+
+    return_json_arr = []
+    count = 0
+
+    while count < size:
+        return_dict = {
+            'time': vel[count]['time'],
+            'sensor': 'ldisp',
+            'data': [
+                x_disp[count],
+                y_disp[count],
+                z_disp[count],
+                vel[count]['data'][3]
+            ]
+        }
+        return_json_arr.append(json.dumps(return_dict))
+        count += 1
+
+    prev_disp[0] = x_disp[count - 1]
+    prev_disp[1] = y_disp[count - 1]
+    prev_disp[2] = z_disp[count - 1]
+
+    return prev_disp, return_json_arr
+
+
+def out_row_pitch_yaw(ACCELArray, MAGArray):
     DataType = ACCELArray[0]["sensor"]
     returnJSONArray = []
     if DataType != "accel":
@@ -148,87 +173,115 @@ def outputRowPitchYaw(ACCELArray, MAGArray):
         return "Magnetometer readings required"
     else:
         size = len(ACCELArray)
-        accelData = SVR_process_monotype(ACCELArray)
-        magData = SVR_process_monotype(MAGArray)
+        accelData = svr_process_monotype(ACCELArray)
+        magData = svr_process_monotype(MAGArray)
         for count in range(size):
-            r = (float)(accelData[count]["data"][3]/180)
-            p = (float)(magData[count]["data"][4]/180)
+            r = (float)(accelData[count]["data"][3] / 180)
+            p = (float)(magData[count]["data"][4] / 180)
             xm = MAGArray[count]["data"][0]
             ym = MAGArray[count]["data"][1]
             zm = MAGArray[count]["data"][2]
             y = calcYaw(r, p, xm, ym, zm)
             t = accelData[count]["time"]
             hr = magData[count]["data"][3]
-            returnDict = {'time':t, 'sensor':'rpy',
-                          'data':[r, p, y, hr]}
+            returnDict = {'time': t, 'sensor': 'rpy',
+                          'data': [r, p, y, hr]}
             returnJSONObject = json.dumps(returnDict)
             returnJSONArray.append(returnJSONObject)
         print(returnJSONArray)
         return returnJSONArray
 
-def calcAngularVelocity(GYROArray):
-    data = SVR_process_monotype(GYROArray)
-    if data[0]["sensor"] != "gyro":
-        return "Gyroscope readings required"
-    else:
-        map(lambda x: float(x["data"][0]/180), data)
-        map(lambda x: float(x["data"][1]/180), data)
-        map(lambda x: float(x["data"][2]/180), data)
-        print(data)
-        return data
+
+def calc_ang_velocity(gyro_arr):
+    gyro_arr = map(lambda x:
+                   {'time': x['time'],
+                    'sensor': x['sensor'],
+                    'data': [
+                        float(x["data"][0] / 180),
+                        float(x["data"][1] / 180),
+                        float(x["data"][2] / 180),
+                        x["data"][3]]
+                    }, gyro_arr)
+
+    return gyro_arr
 
 
 # yaw = atan2( (-ymag*cos(Roll) + zmag*sin(Roll) ) , (xmag*cos(Pitch) + ymag*sin(Pitch)*sin(Roll)+ zmag*sin(Pitch)*cos(Roll)) )
 def calcYaw(roll, pitch, xmag, ymag, zmag):
     arg1 = -1 * ymag * np.cos(roll) + zmag * np.sin(roll)
-    arg2 = xmag * np.cos(pitch) + ymag * np.sin(pitch) * np.sin*(roll) + zmag * np.sin(pitch) * np.cos(roll)
+    arg2 = xmag * np.cos(pitch) + ymag * np.sin(pitch) * np.sin * (
+        roll) + zmag * np.sin(pitch) * np.cos(roll)
     return np.arctan2(arg1, arg2)
+
 
 # {"time":1009,"sensor":"Color","data":[2]}
 # 4in = 0.1016m
 # 100ft = 30.48m
 # 50ft = 15.24m
 # prevStats = [time, displacement, velocity]
-def Optical(OptJSON, prevStats, counter):
+def optical(opt_json, prev_stats, counter):
+
     if counter == 1:
-        if OptJSON["data"] == 1 or OptJSON["data"] == 2:
-            prevStats[2] = float(30.48/OptJSON["time"] - prevStats[0])
-            prevStats[0] = OptJSON["time"]
-            prevStats[1] += 30.48
+        if opt_json["data"] == 1 or opt_json["data"] == 2:
+            prev_stats[2] = float(
+                30.48 / opt_json["time"] - prev_stats[0])
+            prev_stats[0] = opt_json["time"]
+            prev_stats[1] += 30.48
             counter += 1
     elif counter <= 41:
-        if OptJSON["data"] == 1 or OptJSON["data"] == 2:
-            prevStats[2] = float(30.5816/OptJSON["time"] - prevStats[0])
-            prevStats[0] = OptJSON["time"]
-            prevStats[1] += 30.5816
+        if opt_json["data"] == 1 or opt_json["data"] == 2:
+            prev_stats[2] = float(
+                30.5816 / opt_json["time"] - prev_stats[0])
+            prev_stats[0] = opt_json["time"]
+            prev_stats[1] += 30.5816
             counter += 1
-    print(prevStats)
-    return prevStats, counter
+
+    return prev_stats, counter
+
+
+def main(lines):
+    init_disp = [0.0, 0.0, 0.0]
+    prev_stats = [0.0, 0.0, 0.0]
+    counter = 1
+    array = lines['to_parse']
+    data_type = array[0]['sensor']
+    parsed_data = svr_process_monotype(array, data_type)
+
+    if parsed_data:
+        if data_type != "Color":
+            if data_type == 'gyro':
+                print json.dumps({
+                    'parsed': calc_ang_velocity(parsed_data)
+                })
+
+            if data_type == 'accel':
+                print json.dumps({
+                    'parsed': calc_lat_force(parsed_data)
+                })
+                sys.stdout.flush()
+
+                lvel = calc_lin_velocity(parsed_data)
+
+                print json.dumps({'parsed': lvel})
+                sys.stdout.flush()
+
+                init_disp, ldisp = calc_lin_displacement(init_disp,
+                                                         lvel)
+
+                print json.dumps({'parsed': ldisp})
+                sys.stdout.flush()
+
+        if data_type == "Color":
+            prev_stats, counter = optical(parsed_data, prev_stats,
+                                          counter)
+            print json.dumps({'parsed': prev_stats})
+            sys.stdout.flush()
+
+
+def read_in():
+    lines = sys.stdin.readlines()
+    return json.loads(lines[0])
 
 
 if __name__ == '__main__':
-    data = input()
-    initDisp = [0.0, 0.0, 0.0]
-    prevStats = [0.0, 0.0, 0.0]
-    counter = 1
-    while True:
-        if data == 'break':
-            break
-            exit(0)
-        else:
-            jsonarray = json.loads(data)
-            if jsonarray[0]["sensor"] != "Color":
-                jsonarray = SVR_process_monotype(jsonarray)
-
-                if (jsonarray[0]["sensor"] == 'gyro'):
-                    calcAngularVelocity(jsonarray)
-
-                if (jsonarray[0]["sensor"] == 'accel'):
-                    calcLateralForce(jsonarray)
-                    calcLinearVelocity(jsonarray)
-                    initDisp = calcLinearDisplacement(jsonarray, initDisp)
-
-            if jsonarray["sensor"] == "Color":
-                prevStats, counter = Optical(jsonarray, prevStats, counter)
-
-            data = input()
+    main(read_in())

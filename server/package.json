@@ -1,8 +1,8 @@
-
 {
   "dependencies": {
     "express": "^4.15.3",
     "fs": "0.0.1-security",
+    "python-shell": "^0.4.0",
     "serialport": "^4.0.7",
     "simple-node-logger": "^0.93.28",
     "socket.io": "^2.0.3",

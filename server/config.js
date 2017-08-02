@@ -7,5 +7,10 @@ module.exports = {
     PORT: 8002,
     CHECK_DELAY: 400,
     RAW_OUT_BUFF: 1000,
-    AR_BITRATE: 115200
+    AR_BITRATE: 115200,
+    NAV_PY: 'NAV.py',
+    SIMPLE_LOGGER: {
+        logFilePath:'blackbox.log',
+        timestampFormat:'YYYY-MM-DD HH:mm:ss.SSS'
+    }
 };
