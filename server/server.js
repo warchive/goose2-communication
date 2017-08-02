@@ -28,7 +28,9 @@ const log = SimpleNodeLogger.createSimpleLogger(CONFIG.SIMPLE_LOGGER);
 let port = getNewPort();
 
 port.on('open', function () {
-    console.log("Open Serial Port");
+    port.flush(function () {
+        console.log("Open Serial Port");
+    });
 });
 
 // Server Setup
