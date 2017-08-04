@@ -35,9 +35,9 @@ Copyright (c) 2017 Team Waterloop
 
 /* VARIOUS CONFIG */
 
-const SPACEXSTATUS_HOST = '127.0.0.1';
-const SPACEXSTATUS_PORT = 3000;
-const TEAM_ID = 123;
+const SPACEXSTATUS_HOST = process.env.SPACEXSTATUS_HOST    || '192.168.0.1';
+const SPACEXSTATUS_PORT = process.env.SPACEXSTATUS_PORT    || 3000;
+const TEAM_ID =           process.env.SPACEXSTATUS_TEAM_ID || 123;
 
 const sendFrequency = 10; // Hz. Cannot be higher than 10, no specified minimum.
 
