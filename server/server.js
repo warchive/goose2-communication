@@ -15,6 +15,7 @@ const PythonShell = require('python-shell');
 let dataLog = [];
 let connectCounter = 0;
 let RAW_OUT = true;
+const RAW_FILE = H.getFilename();
 let timer = null;
 
 // Setup server
@@ -51,7 +52,7 @@ io.sockets.on('connection', function (socket) {
     socket.on('disconnect', function() {
         log.info('Client count: ' + --connectCounter);
         if (connectCounter === 0) {
-            H.writer(dataLog);
+            H.writer(RAW_FILE, dataLog, fs);
         } else {
             socket.emit('message', JSON.stringify({time: 0, message: "client count: " + connectCounter}));
         }
@@ -85,7 +86,7 @@ io.sockets.on('connection', function (socket) {
 
 
     socket.on('trigger_save', function() {
-        H.writer(dataLog);
+        H.writer(RAW_FILE, dataLog, fs);
         log.info("save triggered from client");
         socket.emit('message', JSON.stringify({time: 0, message: "saved raw out file"}));
     });
@@ -145,7 +146,7 @@ io.sockets.on('connection', function (socket) {
             if (dataLog.length === CONFIG.RAW_OUT_BUFF) {
                 console.log("saved "+CONFIG.RAW_OUT_BUFF+" lines into a file");
                 socket.emit('message', JSON.stringify({time: 0, message: "saved "+CONFIG.RAW_OUT_BUFF+" lines to raw out"}));
-                H.writer(dataLog, fs);
+                H.writer(RAW_FILE, dataLog, fs);
                 dataLog = [];
             }
         }
