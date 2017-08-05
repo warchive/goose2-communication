@@ -167,9 +167,9 @@ def calc_lin_displacement(prev_disp, vel):
 def out_row_pitch_yaw(ACCELArray, MAGArray):
     DataType = ACCELArray[0]["sensor"]
     returnJSONArray = []
-    if DataType != "accel":
+    if DataType[0:5] != "accel":
         return "Accelerometer readings required"
-    elif MAGArray[0]["sensor"] != "mag":
+    elif MAGArray[0]["sensor"][0:3] != "mag":
         return "Magnetometer readings required"
     else:
         size = len(ACCELArray)
@@ -249,12 +249,12 @@ def main(lines):
 
     if parsed_data:
         if data_type != "Color":
-            if data_type == 'gyro':
+            if data_type[0:4] == 'gyro':
                 print json.dumps({
                     'parsed': calc_ang_velocity(parsed_data)
                 })
 
-            if data_type == 'accel':
+            if data_type[0:5] == 'accel':
                 print json.dumps({
                     'parsed': calc_lat_force(parsed_data)
                 })
@@ -271,7 +271,7 @@ def main(lines):
                 print json.dumps({'parsed': ldisp})
                 sys.stdout.flush()
 
-        if data_type == "Color":
+        if data_type[0:5] == "Color":
             prev_stats, counter = optical(parsed_data, prev_stats,
                                           counter)
             print json.dumps({'parsed': prev_stats})
