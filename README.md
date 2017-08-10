@@ -51,3 +51,21 @@ Notes:
 
 * Only certain commands and certain types of data is sent through the communication pipeline
 * Find information about it [here](http://htmlpreview.github.io/?https://github.com/teamwaterloop/communication-system/blob/master/communication_format.html)
+
+# IO data structure used in NAV.py:
+
+* All heartbeat data are preserved throughout the processing
+
+* `svr_process_monotype(json_arr, d_type)` does preliminary error correction on the input stream. Disabling this function will NOT affect other computations.
+
+* `calc_lat_force(accel_arr)` takes an array of accelerometer data and calculates the force applied to the pod in x,y, and z directions. Return array has time in seconds and force in Newtons assuming 140kg for the weight of the pod.
+
+* `calc_lin_velocity(accel_arr)` takes an array of accelerometer data and outputs acceleration in m/s^2. Return array has time in seconds and sensor type "lvel"
+
+* `calc_lin_displacement(prev_disp, vel)` takes an array of previously computed displacements and velocities calculated in `calc_lin_velocity()`. The function outputs displacement in meters and time in seconds. Sensor type = "ldisp"
+
+* `out_row_pitch_yaw()` should be disabled in the python script and directly computed on the arduino since yaw would require two input streams with synchronized time stamps.
+
+* `calc_ang_velocity(gyro_arr)` outputs angular velocitiy in radians per second. The kvp for 'sensor' : sensor_type is unchanged.
+
+* `optical(opt_json, prev_stats, counter)` takes in an array of optical sensor data in json format (which will come from RPi), an array of previously computed data, and a counter (both of which will be stored in the script). prev_stats has the format [time, displacement, velocity] and will be printed to stdout at the end of the main function call.
