@@ -3,8 +3,10 @@
 
 import numpy as np
 from sklearn.svm import SVR
+import ast
 import sys
 import json
+import matplotlib.pyplot as plt
 
 
 def svr_process_monotype(json_arr, d_type):
@@ -16,20 +18,25 @@ def svr_process_monotype(json_arr, d_type):
     heartbeat = []
 
     try:
-        for k in json_arr:
-            x.append(k["data"][0])
-            y.append(k["data"][1])
-            z.append(k["data"][2])
-            heartbeat.append(k["data"][3])
-            t.append([float(k["time"] / 1000)])
+        count = 0
+        while (count < json_arr-1):
+            if json_arr[count]["data"][0] != json_arr[count+1]["data"][0]:
+                x.append(json_arr[count]["data"][0])
+                y.append(json_arr[count]["data"][1])
+                z.append(json_arr[count]["data"][2])
+                heartbeat.append(json_arr[count]["data"][3])
+                t.append([json_arr[count]["time"]])
+            count += 1
 
-        svr_rbf = SVR(kernel='rbf', C=0.2e2, gamma=0.2, verbose=False)
+        svr_rbf = SVR(kernel='rbf', C=0.2e2, gamma=0.5, verbose=False)
         x = np.array(x)
         y = np.array(y)
         z = np.array(z)
         x_rbf = svr_rbf.fit(t, x).predict(t)
         y_rbf = svr_rbf.fit(t, y).predict(t)
         z_rbf = svr_rbf.fit(t, z).predict(t)
+
+        print(x_rbf)
 
         return_json_arr = []
         count = 0
@@ -49,7 +56,7 @@ def svr_process_monotype(json_arr, d_type):
             count += 1
             return_json_arr.append(obj)
 
-        # print(return_json_arr)
+        print(return_json_arr)
         return return_json_arr
 
     except Exception:
@@ -58,7 +65,7 @@ def svr_process_monotype(json_arr, d_type):
 
 def calc_lat_force(accel_arr):
     accel_arr = map(lambda x:
-                    {'time': x['time'],
+                    {'time': float(x['time']/1000),
                      'sensor': 'latf',
                      'data': [
                          float(x["data"][0] * 140),
@@ -66,7 +73,6 @@ def calc_lat_force(accel_arr):
                          float(x["data"][2] * 140),
                          x["data"][3]]
                      }, accel_arr)
-
     return accel_arr
 
 
@@ -79,7 +85,7 @@ def calc_lin_velocity(accel_arr):
         x.append(i["data"][0] * 9.80665)
         y.append(i["data"][1] * 9.80665)
         z.append(i["data"][2] * 9.80665)
-        t.append((i["time"]))
+        t.append(float(i["time"]/1000))
         heartbeat.append(i["data"][3])
 
     x_vel.append(0)
@@ -112,7 +118,6 @@ def calc_lin_velocity(accel_arr):
 
         return_json_arr.append(json.dumps(return_dict))
         count += 1
-
     return return_json_arr
 
 
@@ -125,7 +130,9 @@ def calc_lin_displacement(prev_disp, vel):
     z_disp.append(prev_disp[2])
 
     count = 1
+    vel = map(lambda x: ast.literal_eval(x), vel)
     while count < size:
+
         x_disp.append(float(
             (vel[count]['data'][0] - vel[count - 1]['data'][0]) *
             (vel[count]['time'] -
@@ -194,15 +201,14 @@ def out_row_pitch_yaw(ACCELArray, MAGArray):
 
 def calc_ang_velocity(gyro_arr):
     gyro_arr = map(lambda x:
-                   {'time': x['time'],
+                   {'time': float(x['time']/1000),
                     'sensor': x['sensor'],
                     'data': [
-                        float(x["data"][0] / 180),
-                        float(x["data"][1] / 180),
-                        float(x["data"][2] / 180),
+                        float(x["data"][0] / 180.0),
+                        float(x["data"][1] / 180.0),
+                        float(x["data"][2] / 180.0),
                         x["data"][3]]
                     }, gyro_arr)
-
     return gyro_arr
 
 
@@ -243,38 +249,41 @@ def main(lines):
     init_disp = [0.0, 0.0, 0.0]
     prev_stats = [0.0, 0.0, 0.0]
     counter = 1
-    array = lines['to_parse']
+    array = map(lambda x: ast.literal_eval(x),lines)
+
     data_type = array[0]['sensor']
+
     parsed_data = svr_process_monotype(array, data_type)
+    parsed_data = array
 
     if parsed_data:
         if data_type != "Color":
             if data_type[0:4] == 'gyro':
-                print json.dumps({
+                print(json.dumps({
                     'parsed': calc_ang_velocity(parsed_data)
-                })
+                }))
 
-            if data_type[0:5] == 'accel':
-                print json.dumps({
+            if data_type[0:4] == 'accel':
+                print(json.dumps({
                     'parsed': calc_lat_force(parsed_data)
-                })
+                }))
                 sys.stdout.flush()
 
                 lvel = calc_lin_velocity(parsed_data)
 
-                print json.dumps({'parsed': lvel})
+                print(json.dumps({'parsed': lvel}))
                 sys.stdout.flush()
 
                 init_disp, ldisp = calc_lin_displacement(init_disp,
                                                          lvel)
 
-                print json.dumps({'parsed': ldisp})
+                print(json.dumps({'parsed': ldisp}))
                 sys.stdout.flush()
 
-        if data_type[0:5] == "Color":
+        if data_type == "Color":
             prev_stats, counter = optical(parsed_data, prev_stats,
                                           counter)
-            print json.dumps({'parsed': prev_stats})
+            print(json.dumps({'parsed': prev_stats}))
             sys.stdout.flush()
 
 
@@ -285,3 +294,4 @@ def read_in():
 
 if __name__ == '__main__':
     main(read_in())
+
