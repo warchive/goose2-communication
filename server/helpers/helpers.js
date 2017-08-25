@@ -9,7 +9,7 @@ module.exports = {
     writer: function (filename, data, fs) {
         fs.writeFile(filename, JSON.stringify({data: data}), function (err) {
             if (err) throw err;
-            log.info('data saved in /launch-records/' + filename);
+//            log.info('data saved in /launch-records/' + filename);
             console.log('data saved in /launch-records/' + filename);
         });
     },

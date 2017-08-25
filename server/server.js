@@ -10,7 +10,7 @@ const serialport = require('serialport');
 const util = require('util');
 const fs = require('fs');
 const H = require('./helpers/helpers.js');
-const PythonShell = require('python-shell');
+//const PythonShell = require('python-shell');
 
 let dataLog = [];
 let connectCounter = 0;
@@ -42,8 +42,8 @@ server.listen(CONFIG.PORT);
 console.log("listening on port:" + CONFIG.PORT);
 
 // Python setup
-let pyshell = new PythonShell(CONFIG.NAV_PY);
-let py_accel = [], py_gyro = [], py_mag = [];
+//let pyshell = new PythonShell(CONFIG.NAV_PY);
+//let py_accel = [], py_gyro = [], py_mag = [];
 
 // Listeners
 io.sockets.on('connection', function (socket) {
@@ -116,19 +116,19 @@ io.sockets.on('connection', function (socket) {
                 if (obj.sensor === 'gyro') {
                     py_gyro.push(obj);
                     if (py_gyro.length > 60) {
-                        pyshell.send(JSON.stringify({to_parse: py_gyro}));
+                    //    pyshell.send(JSON.stringify({to_parse: py_gyro}));
                         py_gyro = [];
                     }
                 } if (obj.sensor === 'accel') {
                     py_accel.push(obj);
                     if (py_accel.length > 60) {
-                        pyshell.send(JSON.stringify({to_parse: py_accel}));
+                    //    pyshell.send(JSON.stringify({to_parse: py_accel}));
                         py_accel = [];
                     }
                 } if (obj.sensor === 'mag') {
                     py_mag.push(obj);
                     if (py_mag.length > 60) {
-                        pyshell.send(JSON.stringify({to_parse: py_mag}));
+                    //    pyshell.send(JSON.stringify({to_parse: py_mag}));
                         py_mag = [];
                     }
                 } else {
@@ -152,13 +152,13 @@ io.sockets.on('connection', function (socket) {
         }
     });
 
-    pyshell.on('message', function (out) {
+    //pyshell.on('message', function (out) {
         // received a message sent from the Python script (a simple "print" statement)
-        let parsed = JSON.parse(out);
-        for (let i = 0; i < out.parsed.length; i++) {
-            socket.emit('sensor', JSON.stringify(parsed[i]));
-        }
-    });
+    //    let parsed = JSON.parse(out);
+    //    for (let i = 0; i < out.parsed.length; i++) {
+    //        socket.emit('sensor', JSON.stringify(parsed[i]));
+    //    }
+    //});
 
     log.info('Socket is open');
     console.log('Socket is open');
