@@ -59,7 +59,13 @@ io.sockets.on('connection', function (socket) {
     });
 
     socket.on('control', function(data) {
-        let parsed = JSON.parse(data);
+	let parsed;
+	try{
+	    parsed = JSON.parse(data);
+        }catch(e){
+            console.error("JSON parsing error on socket control");
+            return;
+        }
         console.log(parsed);
 
         port.write(data, function(err) {
@@ -106,7 +112,13 @@ io.sockets.on('connection', function (socket) {
     port.on('data', function(data) {
         // console.log("with <3 from arduino: " + data);
 
-        let obj = JSON.parse(data);
+	let obj;
+	try{
+	    obj = JSON.parse(data);
+        }catch(e){
+            console.error("JSON parsing error on port data");
+            return;
+        }
         try {
             if (obj.hasOwnProperty('received')){
                 obj.received = JSON.parse(obj.received);
