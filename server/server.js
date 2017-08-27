@@ -133,50 +133,20 @@ io.sockets.on('connection', function (socket) {
     port.on('data', function (data) {
         // console.log("with <3 from arduino: " + data);
 
-        let obj;
+        let parsed;
         try {
-            obj = JSON.parse(data);
+            parsed = JSON.parse(data);
         } catch (e) {
             console.error("JSON parsing error on port data");
             return;
         }
-        try {
-            if (obj.hasOwnProperty('type') && obj.type === 'state') {
 
-            }
-            if (obj.hasOwnProperty('received')) {
-                obj.received = JSON.parse(obj.received);
-                socket.emit('command_received', JSON.stringify(obj));
-            } else if (obj.hasOwnProperty('sensor')) {
-
-                if (obj.sensor === 'gyro') {
-                    py_gyro.push(obj);
-                    if (py_gyro.length > 60) {
-                        //    pyshell.send(JSON.stringify({to_parse: py_gyro}));
-                        py_gyro = [];
-                    }
-                }
-                if (obj.sensor === 'accel') {
-                    py_accel.push(obj);
-                    if (py_accel.length > 60) {
-                        //    pyshell.send(JSON.stringify({to_parse: py_accel}));
-                        py_accel = [];
-                    }
-                }
-                if (obj.sensor === 'mag') {
-                    py_mag.push(obj);
-                    if (py_mag.length > 60) {
-                        //    pyshell.send(JSON.stringify({to_parse: py_mag}));
-                        py_mag = [];
-                    }
-                } else {
-                    socket.emit('sensor', data);
-                }
-            } else {
-                socket.emit('message', data);
-            }
-        } catch (e) {
-            console.log(e);
+        if (parsed.type === "sensors") {
+            socket.emit("sensors", data)
+        } else if (parsed.type === "state") {
+            socket.emit("state", data)
+        } else if (parsed.type === "message") {
+            socket.emit("message", data)
         }
 
         if (RAW_OUT) {
