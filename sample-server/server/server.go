@@ -1,14 +1,13 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"net"
 	"os"
 
-	"./wloop/message"
-	"./wloop/parsers"
-
-	kcp "github.com/xtaci/kcp-go"
+	"github.com/buger/jsonparser"
+	"github.com/xtaci/kcp-go"
 )
 
 func main() {
@@ -30,31 +29,36 @@ func handleClient(conn net.Conn) {
 
 	buf := make([]byte, 1024)
 	for {
-		invalid := false
+		success := true
+		var id string
+		var iderr error
 		n, err := conn.Read(buf)
 		if err != nil {
 			fmt.Println("Error: ", err)
-			invalid = true
+			success = false
 		} else {
-			msg := message.ClientMessage{}
-			err2 := parsers.JSONByteArrayToMessage(buf[0:n], &msg)
-			if err2 != nil {
-				invalid = true
-			}
-			fmt.Printf("%#v\n", msg)
+			data := buf[0:n]
+			fmt.Printf("%s\n", string(data))
+			id, iderr = jsonparser.GetString(data, "id")
 		}
-		if !invalid {
-			/*_, err2 := conn.Write(buf[0:n])
-			if err2 != nil {
-				return
-			}*/
+		if iderr == nil {
+			acknowledgeMessage(conn, id, success)
 		}
+	}
+}
+
+func acknowledgeMessage(conn net.Conn, id string, success bool) {
+	msg := map[string]interface{}{"id": id, "type": "recieved", "success": success}
+	bytes, err := json.Marshal(msg)
+	checkError(err)
+	if err == nil {
+		_, err2 := conn.Write(bytes)
+		checkError(err2)
 	}
 }
 
 func checkError(err error) {
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error: %s", err.Error())
-		os.Exit(1)
 	}
 }

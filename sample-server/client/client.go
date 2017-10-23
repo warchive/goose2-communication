@@ -22,13 +22,21 @@ func main() {
 	CheckError(err)
 
 	defer kcpconn.Close()
+	buf2 := make([]byte, 1024)
 	for i := 0; i < 1000; i++ {
 		// TODO send actual pod data to test
 
-		msg := `{"type":"hello","data":"` + strconv.Itoa(i) + `"}`
+		msg := `{"id": "12313", type": "hello", "data": { "n": ` + strconv.Itoa(i) + `}}`
 
 		buf := []byte(msg)
 		_, err := kcpconn.Write(buf) // Write a message to the server
+
+		n, err := kcpconn.Read(buf2)
+		if err != nil {
+			fmt.Println("Error: ", err)
+		} else {
+			fmt.Printf("%s\n", buf2[0:n])
+		}
 
 		if err != nil {
 			fmt.Println(msg, err)

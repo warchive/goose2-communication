@@ -2,8 +2,8 @@ package parsers
 
 import "encoding/json"
 
-// MessageToJSONByteArray converts message to JSON byte array to be sent
-func MessageToJSONByteArray(msgObject interface{}) ([]byte, error) {
+// InterfaceToJSONByteArray converts message to JSON byte array to be sent
+func InterfaceToJSONByteArray(msgObject interface{}) ([]byte, error) {
 	result, err := json.Marshal(msgObject)
 	return result, err
 }
