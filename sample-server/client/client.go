@@ -5,11 +5,12 @@ import (
 	"strconv"
 	"time"
 
-	kcp "github.com/xtaci/kcp-go"
+	kcp "github.com/xtaci/kcp-go" // import kcp package
+
 )
 
 // Simple error verification
-func CheckError(err error) {
+func CheckError(err error) 	{
 	if err != nil {
 		fmt.Println("Error: ", err)
 
@@ -22,7 +23,7 @@ func main() {
 	CheckError(err)
 
 	defer kcpconn.Close()
-	buf2 := make([]byte, 1024)
+	buf2 := make([]byte, 1024) //allocating memory for each integer
 	for i := 0; i < 1000; i++ {
 		// TODO send actual pod data to test
 
@@ -31,9 +32,9 @@ func main() {
 		buf := []byte(msg)
 		_, err := kcpconn.Write(buf) // Write a message to the server
 
-		n, err := kcpconn.Read(buf2)
+		n, err := kcpconn.Read(buf2) // Read a message from the server
 		if err != nil {
-			fmt.Println("Error: ", err)
+			fmt.Println("Error:", err)
 		} else {
 			fmt.Printf("%s\n", buf2[0:n])
 		}
