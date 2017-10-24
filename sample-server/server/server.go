@@ -5,18 +5,19 @@ import (
 	"fmt"
 	"net"
 	"os"
+	"time"
 
 	"github.com/buger/jsonparser"
 	"github.com/xtaci/kcp-go"
 )
 
 func main() {
-
+	// Choose port to listen from
 	listener, err := kcp.ListenWithOptions(":10000", nil, 10, 3)
 	checkError(err)
 
 	for {
-		conn, err := listener.Accept()
+		conn, err := listener.Accept() // Wait for call and return a Conn
 		if err != nil {
 			continue
 		}
@@ -25,9 +26,11 @@ func main() {
 }
 
 func handleClient(conn net.Conn) {
-	defer conn.Close()
-
+	start := time.Now()
+	i := 0
+	sum := 0
 	buf := make([]byte, 1024)
+	defer conn.Close()
 	for {
 		success := true
 		var id string
@@ -36,9 +39,19 @@ func handleClient(conn net.Conn) {
 		if err != nil {
 			fmt.Println("Error: ", err)
 			success = false
+			break
 		} else {
+			if(i == 0) {
+        start = time.Now()
+      }
+			i++
 			data := buf[0:n]
-			fmt.Printf("%s\n", string(data))
+			if(i % 1000 == 0) {
+					 sum += int(time.Since(start))
+					 fmt.Println(sum / i)
+					 start = time.Now()
+					 fmt.Printf("%s\n", string(data))
+			}
 			id, iderr = jsonparser.GetString(data, "id")
 		}
 		if iderr == nil {
@@ -47,6 +60,7 @@ func handleClient(conn net.Conn) {
 	}
 }
 
+// Let client know message was recieved
 func acknowledgeMessage(conn net.Conn, id string, success bool) {
 	msg := map[string]interface{}{"id": id, "type": "recieved", "success": success}
 	bytes, err := json.Marshal(msg)
@@ -57,6 +71,7 @@ func acknowledgeMessage(conn net.Conn, id string, success bool) {
 	}
 }
 
+// Check and print errors
 func checkError(err error) {
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error: %s", err.Error())

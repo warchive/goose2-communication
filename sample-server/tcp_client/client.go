@@ -9,9 +9,10 @@ import (
 func main() {
 
 	// connect to this socket
-	conn, _ := net.Dial("tcp", "192.168.43.97:8000")
+	conn, _ := net.Dial("tcp", "localhost:8000")
 	buf2 := make([]byte, 1024)
-	for i := 0; i < 100000; i++ {
+	defer conn.Close()
+	for i := 0; i < 2000000; i++ {
 		// send to socket
 
 		msg := `{"id": "12313", type": "hello", "data": { "n": ` + strconv.Itoa(i) + `}}`
@@ -24,8 +25,12 @@ func main() {
 		if err != nil {
 			fmt.Println("Error:", err)
 		} else {
-			//fmt.Printf("%s\n", buf2[0:n])
 			_ = n
+			//fmt.Printf("%s\n", buf2[0:n])
+		}
+
+		if err != nil {
+			fmt.Println(msg, err)
 		}
 		//fmt.Print("Message from server: " + message)
 	}

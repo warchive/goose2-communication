@@ -3,28 +3,28 @@ package main
 import (
 	"fmt"
 	"strconv"
-	"time"
+	// "time"
 
 	kcp "github.com/xtaci/kcp-go" // import kcp package
 
 )
 
 // Simple error verification
-func CheckError(err error) 	{
+/*func CheckError(err error) 	{
 	if err != nil {
 		fmt.Println("Error: ", err)
 
 	}
-}
+}*/
 
 func main() {
 	// Server address to send packets
-	kcpconn, err := kcp.DialWithOptions("localhost:10000", nil, 10, 3)
-	CheckError(err)
+	kcpconn, _ := kcp.DialWithOptions("localhost:10000", nil, 10, 3)
+	//CheckError(err)
 
 	defer kcpconn.Close()
 	buf2 := make([]byte, 1024) //allocating memory for each integer
-	for i := 0; i < 1000; i++ {
+	for i := 0; i < 2000000; i++ {
 		// TODO send actual pod data to test
 
 		msg := `{"id": "12313", type": "hello", "data": { "n": ` + strconv.Itoa(i) + `}}`
@@ -36,12 +36,13 @@ func main() {
 		if err != nil {
 			fmt.Println("Error:", err)
 		} else {
-			fmt.Printf("%s\n", buf2[0:n])
+			_ = n
+			//fmt.Printf("%s\n", buf2[0:n])
 		}
 
 		if err != nil {
 			fmt.Println(msg, err)
 		}
-		time.Sleep(time.Millisecond * 1000) // Send a packet every second
+		// time.Sleep(time.Millisecond * 1000) // Send a packet every second
 	}
 }
