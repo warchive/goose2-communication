@@ -12,7 +12,7 @@ func main() {
 	conn, _ := net.Dial("tcp", "localhost:8000")
 	buf2 := make([]byte, 1024)
 	defer conn.Close()
-	for i := 0; i < 2000000; i++ {
+	for i := 0; i < 1000000; i++ {
 		// send to socket
 
 		msg := `{"id": "12313", type": "hello", "data": { "n": ` + strconv.Itoa(i) + `}}`

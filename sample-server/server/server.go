@@ -28,7 +28,6 @@ func main() {
 func handleClient(conn net.Conn) {
 	start := time.Now()
 	i := 0
-	sum := 0
 	buf := make([]byte, 1024)
 	defer conn.Close()
 	for {
@@ -41,16 +40,11 @@ func handleClient(conn net.Conn) {
 			success = false
 			break
 		} else {
-			if(i == 0) {
-        start = time.Now()
-      }
 			i++
 			data := buf[0:n]
-			if(i % 1000 == 0) {
-					 sum += int(time.Since(start))
-					 fmt.Println(sum / i)
-					 start = time.Now()
-					 fmt.Printf("%s\n", string(data))
+			if i%1000 == 0 {
+				fmt.Println(time.Duration(int64(time.Since(start)) / int64(i)))
+				fmt.Printf("%s\n", string(data))
 			}
 			id, iderr = jsonparser.GetString(data, "id")
 		}
