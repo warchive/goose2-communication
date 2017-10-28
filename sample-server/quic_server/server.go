@@ -16,19 +16,17 @@ import (
 	"github.com/lucas-clemente/quic-go"
 )
 
-const addr = "localhost:10000"
+const addr = ":10000"
 
 func main() {
 	// Choose port to listen from
 	config := quic.Config{IdleTimeout: 0}
 	listener, err := quic.ListenAddr(addr, generateTLSConfig(), &config)
 	checkError(err)
-
+	fmt.Println("Server started")
 	for {
 		session, err := listener.Accept() // Wait for call and return a Conn
-		if err != nil {
-			continue
-		}
+		checkError(err)
 		go handleClient(session)
 	}
 }
@@ -53,7 +51,7 @@ func handleClient(session quic.Session) {
 		} else {
 			i++
 			data := buf[0:n]
-			if i%1000 == 0 {
+			if i%100 == 0 {
 				fmt.Println(time.Duration(int64(time.Since(start)) / int64(i)))
 				fmt.Printf("%s\n", string(data))
 			}
