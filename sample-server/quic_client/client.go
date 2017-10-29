@@ -23,38 +23,23 @@ const addr = "162.243.171.232:10000"
 func main() {
 	// Server address to send packets
 	config := quic.Config{RequestConnectionIDOmission: false}
-	session, err := quic.DialAddr("localhost:10000", &tls.Config{InsecureSkipVerify: true}, &config)
+	session, err := quic.DialAddr(addr, &tls.Config{InsecureSkipVerify: true}, &config)
 	if err != nil {
 		fmt.Println(err)
 	}
-
-	stream, err := session.OpenStreamSync()
-	if err != nil {
-		fmt.Println(err)
-	}
-	//CheckError(err)
-
-	buf2 := make([]byte, 1024) //allocating memory for each integer
-	for i := 0; i < 10000; i++ {
-		// TODO send actual pod data to test
-		/*msg := `{"id": "12313", type": "hello", "data": { "n": ` + strconv.Itoa(i) + `}}`
-
-		buf := []byte(msg)
-		_, err := (stream).Write(buf) // Write a message to the server
+	for j := 0; j < 50; j++ {
+		stream, err := session.OpenStream()
 		if err != nil {
-			fmt.Println("Error:", err)
+			fmt.Println(err)
 		}
+		//CheckError(err)
 
-		n, err := (stream).Read(buf2) // Read a message from the server
-		if err != nil {
-			fmt.Println("Error:", err)
-		} else {
-			_ = n
-			fmt.Printf("%s\n", buf2[0:n])
-		}*/
-		time.Sleep(time.Millisecond)
-		go sendPacket(i, &stream, buf2)
-		//time.Sleep(time.Millisecond * 1000) // Send a packet every second
+		buf2 := make([]byte, 1024) //allocating memory for each integer
+		go func(j int) {
+			for i := 0; i < 1000; i++ {
+				sendPacket(j*1000+i, &stream, buf2)
+			}
+		}(j)
 	}
 	for {
 		time.Sleep(time.Millisecond * 1000)

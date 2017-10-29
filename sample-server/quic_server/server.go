@@ -18,6 +18,8 @@ import (
 
 const addr = ":10000"
 
+var i int
+
 func main() {
 	// Choose port to listen from
 	config := quic.Config{IdleTimeout: 0}
@@ -26,20 +28,29 @@ func main() {
 	fmt.Println("Server started")
 	for {
 		session, err := listener.Accept() // Wait for call and return a Conn
-		checkError(err)
+		if err != nil {
+			break
+		}
 		go handleClient(session)
 	}
 }
 
 func handleClient(session quic.Session) {
-	start := time.Now()
-	i := 0
-	buf := make([]byte, 1024)
 	defer session.Close(nil)
-	stream, err := session.AcceptStream()
-	if err != nil {
-		return
+	for {
+		stream, err := session.AcceptStream()
+		if err != nil {
+			fmt.Println(err)
+			break
+		} else {
+			go handleStream(stream)
+		}
 	}
+}
+
+func handleStream(stream quic.Stream) {
+	start := time.Now()
+	buf := make([]byte, 1024)
 	for {
 		success := true
 		var id string
