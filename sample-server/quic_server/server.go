@@ -71,6 +71,9 @@ func handleStream(stream quic.Stream) {
 		if iderr == nil {
 			acknowledgeMessage(stream, id, success)
 		}
+		if (i % 100 == 99) {
+			fmt.Printf("%d\n",i)
+		}
 	}
 }
 
@@ -112,3 +115,4 @@ func generateTLSConfig() *tls.Config {
 	}
 	return &tls.Config{Certificates: []tls.Certificate{tlsCert}}
 }
+

@@ -38,7 +38,7 @@ func handleClient(conn net.Conn) {
 		} else {
 			i++
 			data := buf[0:n]
-			if i % 1000 == 0 {
+			if i % 100 == 0 {
 				fmt.Println(time.Duration(int64(time.Since(start)) / int64(i)))
 				fmt.Printf("%s\n", string(data))
 			}
