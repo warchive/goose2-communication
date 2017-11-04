@@ -18,7 +18,7 @@ import (
 	}
 }*/
 
-const addr = "162.243.171.232:10000"
+const addr = "10.173.212.248:10000"
 
 func main() {
 	// Server address to send packets

@@ -19,7 +19,7 @@ import (
 
 func main() {
 	// Server address to send packets
-	kcpconn, _ := kcp.DialWithOptions("localhost:10000", nil, 10, 3)
+	kcpconn, _ := kcp.DialWithOptions("10.173.212.248:10000", nil, 10, 3)
 	//CheckError(err)
 
 	defer kcpconn.Close()
