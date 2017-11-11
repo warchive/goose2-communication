@@ -16,22 +16,28 @@ import (
 	"github.com/lucas-clemente/quic-go"
 )
 
-const addr = ":10000"
+const addr1 = ":10000"
+const addr2 = ":12345"
+
 
 var i int
 
 func main() {
 	// Choose port to listen from
 	config := quic.Config{IdleTimeout: 0}
-	listener, err := quic.ListenAddr(addr, generateTLSConfig(), &config)
+	listener1, err := quic.ListenAddr(addr1, generateTLSConfig(), &config)
+	checkError(err)
+	listener2, err := quic.ListenAddr(addr2, generateTLSConfig(), &config)
 	checkError(err)
 	fmt.Println("Server started")
 	for {
-		session, err := listener.Accept() // Wait for call and return a Conn
+		session1, err := listener1.Accept() // Wait for call and return a Conn
+		session2, err := listener2.Accept() // Wait for call and return a Conn
 		if err != nil {
 			break
 		}
-		go handleClient(session)
+		go handleClient(session1)
+		go handleClient(session2)
 	}
 }
 
