@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"strconv"
 	"sync"
-	// "time"
-	"github.com/lucas-clemente/quic-go"
+	quic "github.com/lucas-clemente/quic-go"
+	// "github.com/buger/jsonparser"
 )
 
 // Simple error verification
@@ -20,16 +20,14 @@ const addr1 = "10.173.212.248:10000"
 const addr2 = "10.173.212.248:12345"
 
 func main() {
-	// Open sessions to send packets
 	config := quic.Config{RequestConnectionIDOmission: false}
 
+	// Open sessions to send packets
 	var sessions [2]quic.Session
-
 	session1, err := quic.DialAddr(addr1, &tls.Config{InsecureSkipVerify: true}, &config)
 	CheckError(err)
 	session2, err := quic.DialAddr(addr2, &tls.Config{InsecureSkipVerify: true}, &config)
 	CheckError(err)
-
 	sessions[0] = session1
 	sessions[1] = session2
 
@@ -48,9 +46,9 @@ func OpenStream(j int, session *quic.Session) {
 	buf2 := make([]byte, 1024) //allocating memory
 	stream, err := (*session).OpenStream()
 	CheckError(err)
-	for i := 0; i < 1000; i++ {
+	//id, iderr = jsonparser.GetString(data, "id")
+	for i := 0; i < 10000; i++ {
 		SendPacket(j*1000+i, &stream, buf2)
-		fmt.Println("hello " + strconv.Itoa(i))
 	}
 }
 
