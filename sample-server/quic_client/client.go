@@ -16,6 +16,7 @@ func CheckError(err error) 	{
 	}
 }
 
+// Different addresses and ports to send data to
 const addr1 = "10.173.212.248:10000"
 const addr2 = "10.173.212.248:12345"
 
@@ -46,6 +47,7 @@ func OpenStream(j int, session *quic.Session) {
 	buf2 := make([]byte, 1024) //allocating memory
 	stream, err := (*session).OpenStream()
 	CheckError(err)
+	// TODO parse data from JSON files
 	//id, iderr = jsonparser.GetString(data, "id")
 	for i := 0; i < 10000; i++ {
 		SendPacket(j*1000+i, &stream, buf2)
