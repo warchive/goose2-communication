@@ -1,16 +1,13 @@
 package main
 
 import (
-	"crypto/rand"
-	"crypto/rsa"
-	"crypto/tls"
-	"crypto/x509"
 	"encoding/json"
-	"encoding/pem"
 	"fmt"
-	"math/big"
 	"os"
 	"time"
+
+	"./lib/tls"
+	"./lib/wstream"
 
 	"github.com/buger/jsonparser"
 	"github.com/lucas-clemente/quic-go"
@@ -19,15 +16,14 @@ import (
 const addr1 = ":10000"
 const addr2 = ":12345"
 
-
 var i int
 
 func main() {
 	// Choose port to listen from
 	config := quic.Config{IdleTimeout: 0}
-	listener1, err := quic.ListenAddr(addr1, generateTLSConfig(), &config)
+	listener1, err := quic.ListenAddr(addr1, tls.GenerateConfig(), &config)
 	checkError(err)
-	listener2, err := quic.ListenAddr(addr2, generateTLSConfig(), &config)
+	listener2, err := quic.ListenAddr(addr2, tls.GenerateConfig(), &config)
 	checkError(err)
 	fmt.Println("Server started")
 	for {
@@ -49,49 +45,41 @@ func handleClient(session quic.Session) {
 			fmt.Println(err)
 			break
 		} else {
-			go handleStream(stream)
+			go handleStream(&stream)
 		}
 	}
 }
 
-func handleStream(stream quic.Stream) {
+func handleStream(stream *quic.Stream) {
 	start := time.Now()
-	buf := make([]byte, 1024)
+	var wstream wstream.Stream = new(wstream.OrderedStream)
+	wstream.Open(stream)
+	i := 0
 	for {
-		success := true
-		var id string
-		var iderr error
-		n, err := stream.Read(buf)
-		if err != nil {
-			fmt.Println("Error: ", err)
-			break
-		} else {
-			i++
-			data := buf[0:n]
-			if i%100 == 0 {
-				fmt.Println(time.Duration(int64(time.Since(start)) / int64(i)))
-				fmt.Printf("%s\n", string(data))
-			}
-			id, iderr = jsonparser.GetString(data, "id")
+		bytes := wstream.ReadSync()
+		i++
+		if i%100 == 0 {
+			fmt.Println(time.Duration(int64(time.Since(start)) / int64(i)))
+			fmt.Printf("%s\n", string(bytes))
 		}
+		id, iderr := jsonparser.GetString(bytes, "id")
 		if iderr == nil {
-			acknowledgeMessage(stream, id, success)
+			acknowledgeMessage(wstream, id, true)
 		}
-		if (i % 100 == 99) {
-			fmt.Printf("%d\n",i)
+		if i%100 == 99 {
+			fmt.Printf("%d\n", i)
 		}
 	}
 }
 
 // Let client know message was recieved
-func acknowledgeMessage(stream quic.Stream, id string, success bool) {
+func acknowledgeMessage(wstream wstream.Stream, id string, success bool) {
 	msg := map[string]interface{}{"id": id, "type": "recieved", "success": success}
 	bytes, err := json.Marshal(msg)
-	checkError(err)
-	if err == nil {
-		_, err2 := stream.Write(bytes)
-		checkError(err2)
+	if err != nil {
+		return
 	}
+	wstream.WriteSync(bytes)
 }
 
 // Check and print errors
@@ -100,25 +88,3 @@ func checkError(err error) {
 		fmt.Fprintf(os.Stderr, "Error: %s", err.Error())
 	}
 }
-
-// Setup a bare-bones TLS config for the server
-func generateTLSConfig() *tls.Config {
-	key, err := rsa.GenerateKey(rand.Reader, 1024)
-	if err != nil {
-		panic(err)
-	}
-	template := x509.Certificate{SerialNumber: big.NewInt(1)}
-	certDER, err := x509.CreateCertificate(rand.Reader, &template, &template, &key.PublicKey, key)
-	if err != nil {
-		panic(err)
-	}
-	keyPEM := pem.EncodeToMemory(&pem.Block{Type: "RSA PRIVATE KEY", Bytes: x509.MarshalPKCS1PrivateKey(key)})
-	certPEM := pem.EncodeToMemory(&pem.Block{Type: "CERTIFICATE", Bytes: certDER})
-
-	tlsCert, err := tls.X509KeyPair(certPEM, keyPEM)
-	if err != nil {
-		panic(err)
-	}
-	return &tls.Config{Certificates: []tls.Certificate{tlsCert}}
-}
-
